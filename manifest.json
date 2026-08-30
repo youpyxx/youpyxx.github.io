@@ -1,12 +1,12 @@
 {
-  "name": "Личный кабинет студента — НГУ",
-  "short_name": "Кабинет",
+  "name": "Личный кабинет студента — ВМК",
+  "short_name": "Кабинет ВМК",
   "description": "Оценки, расписание, сессия и карта кампуса",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F6F4EF",
+  "background_color": "#09182A",
   "theme_color": "#17213A",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
