@@ -559,12 +559,39 @@
   .auth-submit{width:100%;height:45px;border:0;border-radius:9px;background:#E7B43F;color:#081321;font:600 13px 'IBM Plex Sans';cursor:pointer;transition:.16s ease;box-shadow:0 8px 22px rgba(231,180,63,.12);}.auth-submit:hover{background:#F0C45E;transform:translateY(-1px)}.auth-submit:active{transform:translateY(0)}
   .auth-error{min-height:18px;color:#C97970;font-size:11px;margin:5px 1px 5px;line-height:1.35;}
   .auth-note{text-align:center;color:#626e7c;font-size:10px;line-height:1.4;margin:16px 0 0;}
+  .logout-confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility .16s ease;z-index:180;}
+  .logout-confirm-modal.open{opacity:1;visibility:visible;pointer-events:auto;}
+  .logout-confirm-card{width:min(360px,100%);background:var(--paper-2);border:1px solid var(--line-strong);border-radius:14px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.45);transform:translateY(7px) scale(.985);transition:transform .18s ease;}
+  .logout-confirm-modal.open .logout-confirm-card{transform:none;}
+  .logout-confirm-card h3{margin:0 0 7px;font-size:18px;color:var(--text-primary);}
+  .logout-confirm-card p{margin:0;color:var(--slate);font-size:12px;line-height:1.5;}
+  .logout-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px;}
+  .logout-confirm-actions button{height:40px;border-radius:8px;font:500 12px 'IBM Plex Sans';cursor:pointer;}
+  #logout-cancel{border:1px solid var(--line-strong);background:transparent;color:var(--text-primary);}
+  #logout-confirm{border:1px solid rgba(190,74,69,.7);background:transparent;color:#d47770;}
+  body.theme-light .logout-confirm-card{background:#f7f9fb;border-color:rgba(19,40,65,.12);}
+  body.auth-transitioning .auth-screen{animation:authOut .26s ease forwards;}
+  @keyframes authOut{to{opacity:0;transform:scale(1.025);filter:blur(1px);}}
+  .terms-link{border:0;background:none;padding:0;color:var(--gold);font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;}
+  .auth-eye svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .terms-modal{position:fixed;inset:0;z-index:1200;background:rgba(2,8,16,.64);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility .16s ease;}
+  .terms-modal.open{opacity:1;visibility:visible;pointer-events:auto;}
+  .terms-card{position:relative;width:min(650px,100%);max-height:min(760px,88vh);overflow:auto;background:var(--paper-2);border:1px solid var(--line-strong);border-radius:16px;padding:28px 30px 24px;box-shadow:0 24px 80px rgba(0,0,0,.45);transform:translateY(8px) scale(.985);transition:transform .18s ease;}
+  .terms-modal.open .terms-card{transform:none;}
+  .terms-card h2{margin:0 0 18px;font-size:24px;color:var(--text-primary);}
+  .terms-body h3{font-size:13px;margin:17px 0 6px;color:var(--text-primary);}
+  .terms-body p{font-size:12px;line-height:1.55;color:var(--slate);margin:0;}
+  .terms-close{position:absolute;right:13px;top:12px;width:32px;height:32px;border:1px solid var(--line-strong);border-radius:50%;background:transparent;color:var(--slate);font-size:22px;cursor:pointer;}
+  .terms-ok{width:100%;height:42px;border:0;border-radius:9px;background:var(--gold);color:#081321;font:600 13px 'IBM Plex Sans';cursor:pointer;margin-top:20px;}
+  body.theme-light .terms-modal{background:rgba(20,32,48,.34);}
+  body.theme-light .terms-card{background:#f7f9fb;border-color:rgba(19,40,65,.12);}
+  body.theme-light .terms-body p{color:#667085;}
   body.authenticated .auth-screen{display:none;}
   body.theme-light .auth-screen{background:radial-gradient(circle at 50% -10%,rgba(126,157,190,.2),transparent 42%),#e9eef5;}
   body.theme-light .auth-card{background:#f7f9fb;border-color:rgba(19,40,65,.12);box-shadow:0 25px 70px rgba(23,38,57,.16);}
   body.theme-light .auth-title{color:#17243a}.theme-light .auth-tabs{background:#e8edf3;border-color:rgba(19,40,65,.1)}
   body.theme-light .auth-tab{color:#687689}.theme-light .auth-field span{color:#5c6878}.theme-light .auth-field input{background:#fff;color:#1e2a3d;border-color:rgba(19,40,65,.14)}.theme-light .auth-note{color:#7c8794}
-  @media(max-width:600px){.auth-screen{padding:16px;align-items:start;padding-top:calc(22px + env(safe-area-inset-top));}.auth-card{padding:26px 19px 22px;border-radius:16px}.auth-logo{width:70px;height:70px}.auth-title{font-size:24px}.auth-sub{margin-bottom:18px}}
+  @media(max-width:600px){.auth-screen{padding:16px;align-items:start;padding-top:calc(22px + env(safe-area-inset-top));}.auth-field input{font-size:16px;}.auth-card{padding:26px 19px 22px;border-radius:16px}.auth-logo{width:70px;height:70px}.auth-title{font-size:24px}.auth-sub{margin-bottom:18px}}
 
 </style>
 </head>
@@ -580,26 +607,49 @@
         <button class="auth-tab" id="auth-register-tab" type="button">Регистрация</button>
       </div>
       <form class="auth-form active" id="login-form">
-        <label class="auth-field"><span>Номер студенческого</span><input id="login-student-id" inputmode="numeric" autocomplete="username" placeholder="Введите номер" required></label>
-        <label class="auth-field auth-password"><span>Пароль</span><input id="login-password" type="password" autocomplete="current-password" placeholder="Введите пароль" required><button class="auth-eye" type="button" data-target="login-password" aria-label="Показать пароль">◉</button></label>
+        <label class="auth-field"><span>Номер студенческого билета</span><input id="login-student-id" inputmode="numeric" autocomplete="username" placeholder="Введите номер" required></label>
+        <label class="auth-field auth-password"><span>Пароль</span><input id="login-password" type="password" autocomplete="current-password" placeholder="Введите пароль" required><button class="auth-eye" type="button" data-target="login-password" aria-label="Показать пароль" data-visible="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.9 10.9 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.1 3.7"></path><path d="M6.1 8.2C3.7 9.9 2.5 12 2.5 12s3.5 6 9.5 6c1.3 0 2.5-.3 3.6-.8"></path></svg></button></label>
         <div class="auth-error" id="login-error"></div>
         <button class="auth-submit" type="submit">Войти</button>
       </form>
       <form class="auth-form" id="register-form">
-        <label class="auth-field"><span>Имя</span><input id="reg-first" autocomplete="given-name" placeholder="Введите имя" required></label>
         <label class="auth-field"><span>Фамилия</span><input id="reg-last" autocomplete="family-name" placeholder="Введите фамилию" required></label>
+        <label class="auth-field"><span>Имя</span><input id="reg-first" autocomplete="given-name" placeholder="Введите имя" required></label>
         <label class="auth-field"><span>Отчество <em>(необязательно)</em></span><input id="reg-middle" autocomplete="additional-name" placeholder="Введите отчество"></label>
         <label class="auth-field"><span>Номер студенческого</span><input id="reg-student-id" inputmode="numeric" autocomplete="username" placeholder="Введите номер" required></label>
-        <label class="auth-field auth-password"><span>Придумайте пароль</span><input id="reg-password" type="password" autocomplete="new-password" placeholder="Минимум 8 символов" required><button class="auth-eye" type="button" data-target="reg-password" aria-label="Показать пароль">◉</button></label>
+        <label class="auth-field auth-password"><span>Придумайте пароль</span><input id="reg-password" type="password" autocomplete="new-password" placeholder="Минимум 8 символов" required><button class="auth-eye" type="button" data-target="reg-password" aria-label="Показать пароль" data-visible="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.9 10.9 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.1 3.7"></path><path d="M6.1 8.2C3.7 9.9 2.5 12 2.5 12s3.5 6 9.5 6c1.3 0 2.5-.3 3.6-.8"></path></svg></button></label>
         <div class="auth-hint">Лучше использовать буквы верхнего и нижнего регистра и цифры.</div>
-        <label class="auth-field auth-password"><span>Повторите пароль</span><input id="reg-password2" type="password" autocomplete="new-password" placeholder="Повторите пароль" required><button class="auth-eye" type="button" data-target="reg-password2" aria-label="Показать пароль">◉</button></label>
-        <label class="auth-check"><input id="reg-agree" type="checkbox" required><span>Я принимаю правила использования личного кабинета.</span></label>
+        <label class="auth-field auth-password"><span>Повторите пароль</span><input id="reg-password2" type="password" autocomplete="new-password" placeholder="Повторите пароль" required><button class="auth-eye" type="button" data-target="reg-password2" aria-label="Показать пароль" data-visible="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.9 10.9 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.1 3.7"></path><path d="M6.1 8.2C3.7 9.9 2.5 12 2.5 12s3.5 6 9.5 6c1.3 0 2.5-.3 3.6-.8"></path></svg></button></label>
+        <label class="auth-check"><input id="reg-agree" type="checkbox" required><span>Я принимаю <button type="button" class="terms-link" id="terms-link">правила использования личного кабинета</button>.</span></label>
         <div class="auth-error" id="register-error"></div>
         <button class="auth-submit" type="submit">Зарегистрироваться</button>
       </form>
       <p class="auth-note">Демо-авторизация: данные сохраняются только в этом браузере. Для настоящей защиты потребуется серверная база и безопасная авторизация.</p>
     </div>
   </section>
+
+  <div class="terms-modal" id="terms-modal" aria-hidden="true">
+    <div class="terms-card" role="dialog" aria-modal="true" aria-labelledby="terms-title">
+      <button class="terms-close" id="terms-close" type="button" aria-label="Закрыть">×</button>
+      <p class="eyebrow">Документ</p>
+      <h2 id="terms-title">Правила использования личного кабинета</h2>
+      <div class="terms-body">
+        <h3>1. Общие положения</h3>
+        <p>Личный кабинет предназначен для просмотра учебной информации студента: расписания, зачётной книжки, уведомлений и других функций, доступных в интерфейсе сайта.</p>
+        <h3>2. Учётная запись</h3>
+        <p>При регистрации студент указывает достоверные сведения и самостоятельно создаёт пароль. Номер студенческого билета используется как логин. Не передавайте пароль другим людям и не используйте чужую учётную запись.</p>
+        <h3>3. Безопасность</h3>
+        <p>Студент отвечает за сохранность данных для входа. Если есть подозрение, что пароль стал известен другому человеку, его следует изменить и прекратить использование скомпрометированной сессии.</p>
+        <h3>4. Данные на устройстве</h3>
+        <p>В текущей демонстрационной версии данные профиля и настройки сохраняются локально в браузере. Это не является полноценной серверной авторизацией и не должно использоваться для хранения чувствительной информации.</p>
+        <h3>5. Использование сайта</h3>
+        <p>Запрещено пытаться получить доступ к чужим данным, вмешиваться в работу сайта, распространять вредоносный код или использовать сервис способом, который может нарушить его работу.</p>
+        <h3>6. Изменение правил</h3>
+        <p>Правила могут обновляться по мере развития проекта. Перед регистрацией рекомендуется ознакомиться с актуальной версией документа.</p>
+      </div>
+      <button class="terms-ok" id="terms-ok" type="button">Понятно</button>
+    </div>
+  </div>
 
 <div class="app">
 
@@ -886,6 +936,14 @@
         <div><b>Данные профиля</b><span>Настройки и аватар сохраняются на этом устройстве.</span></div>
       </div>
 
+      <div class="logout-confirm-modal" id="logout-confirm-modal" aria-hidden="true">
+        <div class="logout-confirm-card" role="dialog" aria-modal="true" aria-labelledby="logout-title">
+          <h3 id="logout-title">Выйти из аккаунта?</h3>
+          <p>Вы уверены, что хотите завершить текущую сессию?</p>
+          <div class="logout-confirm-actions"><button id="logout-cancel" type="button">Отмена</button><button id="logout-confirm" type="button">Выйти</button></div>
+        </div>
+      </div>
+
       <div class="install-modal" id="install-modal" aria-hidden="true">
         <div class="install-modal-card">
           <button class="install-modal-close" id="install-modal-close" type="button" aria-label="Закрыть">×</button>
@@ -904,8 +962,8 @@
 
 <script>
   // ---------- AUTH (GitHub Pages demo) ----------
-  const AUTH_KEY='studentAuth';       // данные зарегистрированного аккаунта
-  const SESSION_KEY='studentSession'; // текущая сессия
+  const AUTH_KEY='studentAuth';
+  const SESSION_KEY='studentSession';
   const authScreen=document.getElementById('auth-screen');
   const loginTab=document.getElementById('auth-login-tab'), registerTab=document.getElementById('auth-register-tab');
   const loginForm=document.getElementById('login-form'), registerForm=document.getElementById('register-form');
@@ -915,39 +973,43 @@
     document.getElementById('login-error').textContent=''; document.getElementById('register-error').textContent='';
   }
   loginTab?.addEventListener('click',()=>switchAuth('login')); registerTab?.addEventListener('click',()=>switchAuth('register'));
-  document.querySelectorAll('.auth-eye').forEach(btn=>btn.addEventListener('click',()=>{const i=document.getElementById(btn.dataset.target); i.type=i.type==='password'?'text':'password';}));
+  const eyeOpen=`${open_eye}`; const eyeClosed=`${closed_eye}`;
+  document.querySelectorAll('.auth-eye').forEach(btn=>btn.addEventListener('click',()=>{
+    const i=document.getElementById(btn.dataset.target); const visible=i.type==='password'; i.type=visible?'text':'password';
+    btn.dataset.visible=String(visible); btn.innerHTML=visible?eyeOpen:eyeClosed; btn.setAttribute('aria-label',visible?'Скрыть пароль':'Показать пароль');
+  }));
   function setStudentName(user){
     const full=[user.last,user.first,user.middle].filter(Boolean).join(' ');
     document.querySelectorAll('.card-id .name,.profile-name-block h3').forEach(el=>el.textContent=full||'Студент');
     const avatar=document.getElementById('profile-avatar'); if(avatar && !localStorage.getItem('studentAvatar')) avatar.textContent=((user.first||'С')[0]+(user.last||'т')[0]).toUpperCase();
   }
+  function startMainPage(){
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view==='dash'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-dash'));
+  }
   function finishLogin(user){
     localStorage.setItem(AUTH_KEY,JSON.stringify(user));
-    localStorage.setItem(SESSION_KEY,'active');
-    document.body.classList.add('authenticated');
-    setStudentName(user);
+    sessionStorage.setItem(SESSION_KEY,'1');
+    document.body.classList.add('auth-transitioning');
+    setStudentName(user); startMainPage();
+    window.setTimeout(()=>{document.body.classList.add('authenticated'); document.body.classList.remove('auth-transitioning'); showToast?.('Добро пожаловать!');},260);
   }
   function logout(){
-    localStorage.removeItem(SESSION_KEY);
-    document.body.classList.remove('authenticated');
-    closeProfile?.();
-    switchAuth('login');
-    document.getElementById('login-form')?.reset();
-    document.getElementById('login-student-id').value='';
-    document.getElementById('login-password').value='';
-    window.scrollTo(0,0);
+    sessionStorage.removeItem(SESSION_KEY); document.body.classList.remove('authenticated','auth-transitioning');
+    switchAuth('login'); loginForm?.reset(); document.getElementById('login-password').value=''; closeProfile?.();
   }
-  loginForm?.addEventListener('submit',e=>{e.preventDefault(); const id=document.getElementById('login-student-id').value.trim(); const pass=document.getElementById('login-password').value; const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); const err=document.getElementById('login-error'); if(!saved){err.textContent='Профиль не найден. Сначала зарегистрируйтесь.';return;} if(id!==saved.studentId||pass!==saved.password){err.textContent='Неверный номер студенческого или пароль.';return;} finishLogin(saved); showToast?.('Добро пожаловать!');});
-  registerForm?.addEventListener('submit',e=>{e.preventDefault(); const user={first:document.getElementById('reg-first').value.trim(),last:document.getElementById('reg-last').value.trim(),middle:document.getElementById('reg-middle').value.trim(),studentId:document.getElementById('reg-student-id').value.trim(),password:document.getElementById('reg-password').value}; const err=document.getElementById('register-error'); if(!/^\d{4,20}$/.test(user.studentId)){err.textContent='Номер студенческого должен содержать только цифры.';return;} if(user.password.length<8){err.textContent='Пароль должен содержать минимум 8 символов.';return;} if(user.password!==document.getElementById('reg-password2').value){err.textContent='Пароли не совпадают.';return;} const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); if(saved?.studentId===user.studentId){err.textContent='Этот номер студенческого уже зарегистрирован на этом устройстве.';return;} localStorage.setItem(AUTH_KEY,JSON.stringify(user)); finishLogin(user); showToast?.('Профиль создан');});
-  const existingUser=JSON.parse(localStorage.getItem(AUTH_KEY)||'null');
-  const hasActiveSession=localStorage.getItem(SESSION_KEY)==='active';
-  if(existingUser && hasActiveSession){
-    document.body.classList.add('authenticated');
-    setStudentName(existingUser);
-  }else{
-    document.body.classList.remove('authenticated');
-    switchAuth('login');
-  }
+  loginForm?.addEventListener('submit',e=>{e.preventDefault(); const id=document.getElementById('login-student-id').value.trim(); const pass=document.getElementById('login-password').value; const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); const err=document.getElementById('login-error'); if(!saved){err.textContent='Профиль не найден. Сначала зарегистрируйтесь.';return;} if(id!==saved.studentId||pass!==saved.password){err.textContent='Неверный номер студенческого билета или пароль.';return;} finishLogin(saved);});
+  registerForm?.addEventListener('submit',e=>{e.preventDefault(); const user={first:document.getElementById('reg-first').value.trim(),last:document.getElementById('reg-last').value.trim(),middle:document.getElementById('reg-middle').value.trim(),studentId:document.getElementById('reg-student-id').value.trim(),password:document.getElementById('reg-password').value}; const err=document.getElementById('register-error'); if(!/^\d{4,20}$/.test(user.studentId)){err.textContent='Номер студенческого билета должен содержать только цифры.';return;} if(user.password.length<8){err.textContent='Пароль должен содержать минимум 8 символов.';return;} if(user.password!==document.getElementById('reg-password2').value){err.textContent='Пароли не совпадают.';return;} const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); if(saved?.studentId===user.studentId){err.textContent='Этот номер студенческого билета уже зарегистрирован на этом устройстве.';return;} localStorage.setItem(AUTH_KEY,JSON.stringify(user)); finishLogin(user);});
+  const existingUser=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); if(existingUser && sessionStorage.getItem(SESSION_KEY)==='1'){setStudentName(existingUser); document.body.classList.add('authenticated'); startMainPage();}
+
+  // Правила использования
+  const termsModal=document.getElementById('terms-modal');
+  function openTerms(){termsModal?.classList.add('open');termsModal?.setAttribute('aria-hidden','false');}
+  function closeTerms(){termsModal?.classList.remove('open');termsModal?.setAttribute('aria-hidden','true');}
+  document.getElementById('terms-link')?.addEventListener('click',openTerms);
+  document.getElementById('terms-close')?.addEventListener('click',closeTerms);
+  document.getElementById('terms-ok')?.addEventListener('click',closeTerms);
+  termsModal?.addEventListener('click',e=>{if(e.target===termsModal) closeTerms();});
 
   // ---------- navigation ----------
   document.querySelectorAll('.nav-btn').forEach(btn=>{
@@ -1236,7 +1298,13 @@
   profileButtons.forEach(b=>b.addEventListener('click',openProfile));
   profileClose?.addEventListener('click',closeProfile);
   profileBackdrop?.addEventListener('click',closeProfile);
-  document.getElementById('logout-btn')?.addEventListener('click',logout);
+  const logoutModal=document.getElementById('logout-confirm-modal');
+  function openLogoutConfirm(){logoutModal?.classList.add('open');logoutModal?.setAttribute('aria-hidden','false');}
+  function closeLogoutConfirm(){logoutModal?.classList.remove('open');logoutModal?.setAttribute('aria-hidden','true');}
+  document.getElementById('logout-btn')?.addEventListener('click',openLogoutConfirm);
+  document.getElementById('logout-cancel')?.addEventListener('click',closeLogoutConfirm);
+  document.getElementById('logout-confirm')?.addEventListener('click',()=>{closeLogoutConfirm(); logout();});
+  logoutModal?.addEventListener('click',e=>{if(e.target===logoutModal) closeLogoutConfirm();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape') closeProfile();});
 
   function showToast(text){
@@ -1333,6 +1401,7 @@
     }else showToast('Разрешение на уведомления не выдано');
   });
   reminderTime.addEventListener('change',()=>{localStorage.setItem('studentReminder',reminderTime.value);showToast('Время напоминания сохранено');});
+
 
   // ---------- install to home screen ----------
   const installBtn=document.getElementById('install-app-btn');
