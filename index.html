@@ -535,9 +535,72 @@
   body.theme-light .lesson.discipline-pe{background:#D7E8E5;border-left-color:#719A93;color:#273044;}
   body.theme-light .lesson .rm{color:#667085;}
 
+
+  /* ---------- AUTH ---------- */
+  .auth-screen{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% -10%,rgba(42,70,108,.22),transparent 42%),#07111f;overflow:auto;}
+  .auth-card{width:min(430px,100%);background:#0b1929;border:1px solid rgba(255,255,255,.11);border-radius:18px;padding:34px 30px 28px;box-shadow:0 25px 80px rgba(0,0,0,.45);animation:authIn .28s ease both;}
+  @keyframes authIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+  .auth-logo{width:82px;height:82px;object-fit:contain;display:block;margin:0 auto 16px;}
+  .auth-title{text-align:center;font-family:'Fraunces',serif;font-size:27px;color:#ECE9E1;margin:0;}
+  .auth-sub{text-align:center;color:#9DA5AF;font-size:13px;margin:7px 0 22px;}
+  .auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:#071421;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:4px;margin-bottom:20px;}
+  .auth-tab{border:0;background:transparent;color:#8f99a5;border-radius:7px;padding:10px;cursor:pointer;font:500 13px 'IBM Plex Sans';transition:.16s ease;}
+  .auth-tab.active{background:rgba(231,180,63,.13);color:#E7B43F;box-shadow:inset 0 0 0 1px rgba(231,180,63,.14);}
+  .auth-form{display:none;animation:authFormIn .18s ease both;}
+  .auth-form.active{display:block;}
+  @keyframes authFormIn{from{opacity:0;transform:translateX(5px)}to{opacity:1;transform:none}}
+  .auth-field{display:block;margin-bottom:13px;}
+  .auth-field span{display:block;color:#B7BEC7;font-size:11px;margin:0 0 6px 2px;}
+  .auth-field input{width:100%;height:43px;border:1px solid rgba(255,255,255,.11);border-radius:9px;background:#081522;color:#ECE9E1;padding:0 12px;outline:none;font:13px 'IBM Plex Sans';transition:border-color .16s ease,box-shadow .16s ease;}
+  .auth-field input:focus{border-color:rgba(231,180,63,.6);box-shadow:0 0 0 3px rgba(231,180,63,.08);}
+  .auth-password{position:relative}.auth-password input{padding-right:42px}.auth-eye{position:absolute;right:7px;bottom:4px;width:34px;height:35px;border:0;background:transparent;color:#8994a2;cursor:pointer;}
+  .auth-hint{font-size:10px;color:#737f8d;margin:-5px 0 13px 2px;}
+  .auth-check{display:flex;gap:8px;align-items:flex-start;color:#8994a2;font-size:10px;line-height:1.4;margin:8px 0 15px}.auth-check input{margin-top:2px;accent-color:#E7B43F;}
+  .auth-submit{width:100%;height:45px;border:0;border-radius:9px;background:#E7B43F;color:#081321;font:600 13px 'IBM Plex Sans';cursor:pointer;transition:.16s ease;box-shadow:0 8px 22px rgba(231,180,63,.12);}.auth-submit:hover{background:#F0C45E;transform:translateY(-1px)}.auth-submit:active{transform:translateY(0)}
+  .auth-error{min-height:18px;color:#C97970;font-size:11px;margin:5px 1px 5px;line-height:1.35;}
+  .auth-note{text-align:center;color:#626e7c;font-size:10px;line-height:1.4;margin:16px 0 0;}
+  body.authenticated .auth-screen{display:none;}
+  body.theme-light .auth-screen{background:radial-gradient(circle at 50% -10%,rgba(126,157,190,.2),transparent 42%),#e9eef5;}
+  body.theme-light .auth-card{background:#f7f9fb;border-color:rgba(19,40,65,.12);box-shadow:0 25px 70px rgba(23,38,57,.16);}
+  body.theme-light .auth-title{color:#17243a}.theme-light .auth-tabs{background:#e8edf3;border-color:rgba(19,40,65,.1)}
+  body.theme-light .auth-tab{color:#687689}.theme-light .auth-field span{color:#5c6878}.theme-light .auth-field input{background:#fff;color:#1e2a3d;border-color:rgba(19,40,65,.14)}.theme-light .auth-note{color:#7c8794}
+  @media(max-width:600px){.auth-screen{padding:16px;align-items:start;padding-top:calc(22px + env(safe-area-inset-top));}.auth-card{padding:26px 19px 22px;border-radius:16px}.auth-logo{width:70px;height:70px}.auth-title{font-size:24px}.auth-sub{margin-bottom:18px}}
+
 </style>
 </head>
 <body>
+
+  <section class="auth-screen" id="auth-screen" aria-label="Авторизация">
+    <div class="auth-card">
+      <img class="auth-logo" src="vmk-logo-yellow.png" alt="ВМК">
+      <h1 class="auth-title">Личный кабинет студента</h1>
+      <p class="auth-sub">Войдите в кабинет или создайте профиль</p>
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" id="auth-login-tab" type="button">Вход</button>
+        <button class="auth-tab" id="auth-register-tab" type="button">Регистрация</button>
+      </div>
+      <form class="auth-form active" id="login-form">
+        <label class="auth-field"><span>Номер студенческого</span><input id="login-student-id" inputmode="numeric" autocomplete="username" placeholder="Введите номер" required></label>
+        <label class="auth-field auth-password"><span>Пароль</span><input id="login-password" type="password" autocomplete="current-password" placeholder="Введите пароль" required><button class="auth-eye" type="button" data-target="login-password" aria-label="Показать пароль">◉</button></label>
+        <div class="auth-error" id="login-error"></div>
+        <button class="auth-submit" type="submit">Войти</button>
+      </form>
+      <form class="auth-form" id="register-form">
+        <label class="auth-field"><span>Имя</span><input id="reg-first" autocomplete="given-name" placeholder="Введите имя" required></label>
+        <label class="auth-field"><span>Фамилия</span><input id="reg-last" autocomplete="family-name" placeholder="Введите фамилию" required></label>
+        <label class="auth-field"><span>Отчество <em>(необязательно)</em></span><input id="reg-middle" autocomplete="additional-name" placeholder="Введите отчество"></label>
+        <label class="auth-field"><span>Номер студенческого</span><input id="reg-student-id" inputmode="numeric" autocomplete="username" placeholder="Введите номер" required></label>
+        <label class="auth-field auth-password"><span>Придумайте пароль</span><input id="reg-password" type="password" autocomplete="new-password" placeholder="Минимум 8 символов" required><button class="auth-eye" type="button" data-target="reg-password" aria-label="Показать пароль">◉</button></label>
+        <div class="auth-hint">Лучше использовать буквы верхнего и нижнего регистра и цифры.</div>
+        <label class="auth-field auth-password"><span>Повторите пароль</span><input id="reg-password2" type="password" autocomplete="new-password" placeholder="Повторите пароль" required><button class="auth-eye" type="button" data-target="reg-password2" aria-label="Показать пароль">◉</button></label>
+        <label class="auth-check"><input id="reg-agree" type="checkbox" required><span>Я принимаю правила использования личного кабинета.</span></label>
+        <div class="auth-error" id="register-error"></div>
+        <button class="auth-submit" type="submit">Зарегистрироваться</button>
+      </form>
+      <p class="auth-note">Демо-авторизация: данные сохраняются только в этом браузере. Для настоящей защиты потребуется серверная база и безопасная авторизация.</p>
+    </div>
+  </section>
+
 <div class="app">
 
   <aside class="sidebar">
@@ -840,6 +903,52 @@
 </div>
 
 <script>
+  // ---------- AUTH (GitHub Pages demo) ----------
+  const AUTH_KEY='studentAuth';       // данные зарегистрированного аккаунта
+  const SESSION_KEY='studentSession'; // текущая сессия
+  const authScreen=document.getElementById('auth-screen');
+  const loginTab=document.getElementById('auth-login-tab'), registerTab=document.getElementById('auth-register-tab');
+  const loginForm=document.getElementById('login-form'), registerForm=document.getElementById('register-form');
+  function switchAuth(mode){
+    const login=mode==='login'; loginTab.classList.toggle('active',login); registerTab.classList.toggle('active',!login);
+    loginForm.classList.toggle('active',login); registerForm.classList.toggle('active',!login);
+    document.getElementById('login-error').textContent=''; document.getElementById('register-error').textContent='';
+  }
+  loginTab?.addEventListener('click',()=>switchAuth('login')); registerTab?.addEventListener('click',()=>switchAuth('register'));
+  document.querySelectorAll('.auth-eye').forEach(btn=>btn.addEventListener('click',()=>{const i=document.getElementById(btn.dataset.target); i.type=i.type==='password'?'text':'password';}));
+  function setStudentName(user){
+    const full=[user.last,user.first,user.middle].filter(Boolean).join(' ');
+    document.querySelectorAll('.card-id .name,.profile-name-block h3').forEach(el=>el.textContent=full||'Студент');
+    const avatar=document.getElementById('profile-avatar'); if(avatar && !localStorage.getItem('studentAvatar')) avatar.textContent=((user.first||'С')[0]+(user.last||'т')[0]).toUpperCase();
+  }
+  function finishLogin(user){
+    localStorage.setItem(AUTH_KEY,JSON.stringify(user));
+    localStorage.setItem(SESSION_KEY,'active');
+    document.body.classList.add('authenticated');
+    setStudentName(user);
+  }
+  function logout(){
+    localStorage.removeItem(SESSION_KEY);
+    document.body.classList.remove('authenticated');
+    closeProfile?.();
+    switchAuth('login');
+    document.getElementById('login-form')?.reset();
+    document.getElementById('login-student-id').value='';
+    document.getElementById('login-password').value='';
+    window.scrollTo(0,0);
+  }
+  loginForm?.addEventListener('submit',e=>{e.preventDefault(); const id=document.getElementById('login-student-id').value.trim(); const pass=document.getElementById('login-password').value; const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); const err=document.getElementById('login-error'); if(!saved){err.textContent='Профиль не найден. Сначала зарегистрируйтесь.';return;} if(id!==saved.studentId||pass!==saved.password){err.textContent='Неверный номер студенческого или пароль.';return;} finishLogin(saved); showToast?.('Добро пожаловать!');});
+  registerForm?.addEventListener('submit',e=>{e.preventDefault(); const user={first:document.getElementById('reg-first').value.trim(),last:document.getElementById('reg-last').value.trim(),middle:document.getElementById('reg-middle').value.trim(),studentId:document.getElementById('reg-student-id').value.trim(),password:document.getElementById('reg-password').value}; const err=document.getElementById('register-error'); if(!/^\d{4,20}$/.test(user.studentId)){err.textContent='Номер студенческого должен содержать только цифры.';return;} if(user.password.length<8){err.textContent='Пароль должен содержать минимум 8 символов.';return;} if(user.password!==document.getElementById('reg-password2').value){err.textContent='Пароли не совпадают.';return;} const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); if(saved?.studentId===user.studentId){err.textContent='Этот номер студенческого уже зарегистрирован на этом устройстве.';return;} localStorage.setItem(AUTH_KEY,JSON.stringify(user)); finishLogin(user); showToast?.('Профиль создан');});
+  const existingUser=JSON.parse(localStorage.getItem(AUTH_KEY)||'null');
+  const hasActiveSession=localStorage.getItem(SESSION_KEY)==='active';
+  if(existingUser && hasActiveSession){
+    document.body.classList.add('authenticated');
+    setStudentName(existingUser);
+  }else{
+    document.body.classList.remove('authenticated');
+    switchAuth('login');
+  }
+
   // ---------- navigation ----------
   document.querySelectorAll('.nav-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -1127,6 +1236,7 @@
   profileButtons.forEach(b=>b.addEventListener('click',openProfile));
   profileClose?.addEventListener('click',closeProfile);
   profileBackdrop?.addEventListener('click',closeProfile);
+  document.getElementById('logout-btn')?.addEventListener('click',logout);
   document.addEventListener('keydown',e=>{if(e.key==='Escape') closeProfile();});
 
   function showToast(text){
@@ -1223,11 +1333,6 @@
     }else showToast('Разрешение на уведомления не выдано');
   });
   reminderTime.addEventListener('change',()=>{localStorage.setItem('studentReminder',reminderTime.value);showToast('Время напоминания сохранено');});
-
-  // Demo logout for this static prototype
-  document.getElementById('logout-btn')?.addEventListener('click',()=>{
-    closeProfile();showToast('Вы вышли из аккаунта (демо-режим)');
-  });
 
   // ---------- install to home screen ----------
   const installBtn=document.getElementById('install-app-btn');
