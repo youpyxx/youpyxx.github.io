@@ -20,50 +20,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#17213A;
-    --ink-soft:#2B3854;
-    --paper:#F6F4EF;
-    --paper-2:#FFFFFF;
-    --paper-3:#FBFAF6;
-    --text-primary:var(--ink);
-    --gold:#96793F;
-    --gold-deep:#6B5730;
-    --gold-soft:#EDE6D8;
-    --oxblood:#6B3733;
-    --oxblood-soft:#EAE0DE;
-    --sage:#455C4C;
-    --sage-soft:#E1E5DF;
-    --blue:#3E5F86;
-    --blue-soft:#EAF0F8;
-    --slate:#666F7D;
-    --line:#DEDACD;
-    --line-strong:#C7C0AC;
-    --radius:10px;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --paper:#1D2940;
-      --paper-2:#233149;
-      --paper-3:#293750;
-      --text-primary:#EDE9E0;
-      --gold:#C9A255;
-      --gold-deep:#E0BE7D;
-      --gold-soft:#332B1C;
-      --oxblood:#D08A83;
-      --oxblood-soft:#3A2420;
-      --sage:#8FAE97;
-      --sage-soft:#212A22;
-      --blue:#7FA5CE;
-      --blue-soft:#1C2A3B;
-      --slate:#A39C8E;
-      --line:rgba(255,255,255,.09);
-      --line-strong:rgba(255,255,255,.18);
-    }
+    --ink:#081a33;
+    --ink-soft:#102542;
+    --paper:#07111f;
+    --paper-2:#0b1929;
+    --paper-3:#102136;
+    --text-primary:#ECE9E1;
+    --gold:#E7B43F;
+    --gold-deep:#F0C45E;
+    --gold-soft:#302714;
+    --oxblood:#B9675D;
+    --oxblood-soft:#32201f;
+    --sage:#78A18A;
+    --sage-soft:#17271f;
+    --blue:#6D9ED1;
+    --blue-soft:#152b48;
+    --slate:#9DA5AF;
+    --line:rgba(255,255,255,.085);
+    --line-strong:rgba(255,255,255,.17);
+    --radius:11px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:var(--paper);
+    background:radial-gradient(circle at 72% 0%, rgba(28,57,88,.16), transparent 34%), var(--paper);
     color:var(--text-primary);
     font-family:'IBM Plex Sans',sans-serif;
     -webkit-font-smoothing:antialiased;
@@ -77,7 +57,7 @@
 
   /* ---------- SIDEBAR ---------- */
   .sidebar{
-    background:var(--ink);
+    background:linear-gradient(180deg,#091a33 0%,#07162b 100%);
     color:#EDE9DD;
     padding:28px 20px;
     display:flex;
@@ -125,11 +105,32 @@
   .nav-btn .nav-break{display:none;}
   .sidebar-foot{font-size:11px;color:#7C7663;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);margin-top:14px;}
 
+  /* ---------- ICONS / TOPBAR ---------- */
+  .nav-icon{width:19px;height:19px;display:grid;place-items:center;flex:0 0 19px;color:#A9B1BD;transition:color .16s ease,transform .16s ease;}
+  .nav-icon svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .nav-btn.active .nav-icon{color:var(--gold);transform:scale(1.06);}
+  .nav-btn.active{color:var(--gold);box-shadow:inset 3px 0 0 var(--gold),0 5px 18px rgba(231,180,63,.06);}
+  .nav-btn{transition:background .16s ease,color .16s ease,box-shadow .16s ease,transform .16s ease;}
+  .nav-btn:active{transform:scale(.985);}
+  .main-topbar{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin:-8px 0 8px;position:relative;z-index:30;}
+  .top-action{width:34px;height:34px;border:0;background:transparent;color:#B8C0CA;display:grid;place-items:center;border-radius:50%;cursor:pointer;position:relative;transition:color .16s ease,background .16s ease,transform .16s ease;}
+  .top-action:hover{color:var(--gold);background:rgba(255,255,255,.055);transform:translateY(-1px);}
+  .top-action svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .notif-dot{position:absolute;right:1px;top:1px;min-width:16px;height:16px;padding:0 4px;border-radius:10px;background:var(--gold);color:#081321;font:600 9px 'IBM Plex Sans';display:grid;place-items:center;box-shadow:0 0 0 2px var(--paper);}
+  .notif-panel{position:absolute;right:0;top:42px;width:310px;background:#0d1d30;border:1px solid var(--line-strong);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.38);padding:12px;opacity:0;visibility:hidden;transform:translateY(-5px) scale(.98);transform-origin:top right;transition:opacity .16s ease,transform .16s ease,visibility .16s ease;}
+  .notif-panel.open{opacity:1;visibility:visible;transform:translateY(0) scale(1);}
+  .notif-title{font-size:13px;font-weight:600;color:#F0ECE4;padding:3px 5px 9px;}
+  .notif-item{display:flex;gap:10px;padding:10px 6px;border-top:1px solid var(--line);}
+  .notif-item .ni-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);margin-top:5px;flex:0 0 7px;}
+  .notif-item b{display:block;font-size:12px;color:#ECE9E1;font-weight:500;line-height:1.35;}
+  .notif-item span{display:block;font-size:11px;color:var(--slate);margin-top:2px;line-height:1.35;}
+  .mobile-topbar{display:none;}
+
   /* ---------- MAIN ---------- */
   main{padding:36px 44px;max-width:1180px;min-width:0;}
   .view{display:none;}
-  .view.active{display:block;animation:fade .25s ease;}
-  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  .view.active{display:block;animation:viewIn .18s cubic-bezier(.22,.7,.3,1);}
+  @keyframes viewIn{from{opacity:0;transform:translateY(7px);filter:blur(1px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
 
   .page-head{margin-bottom:28px;}
   .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin:0 0 6px;}
@@ -353,9 +354,11 @@
       overflow-wrap:normal;word-break:normal;hyphens:none;
     }
     .ledger th{font-size:9.5px;line-height:1.2;}
-    .ledger th:nth-child(1),.ledger td:nth-child(1){width:54%;}
-    .ledger th:nth-child(2),.ledger td:nth-child(2){width:25%;}
-    .ledger th:nth-child(3),.ledger td:nth-child(3){width:21%;text-align:center;}
+    .ledger th:nth-child(1),.ledger td:nth-child(1){width:48%;}
+    .ledger th:nth-child(2),.ledger td:nth-child(2){width:32%;}
+    .ledger th:nth-child(3),.ledger td:nth-child(3){width:20%;text-align:center;}
+    .ledger thead th:nth-child(2),.ledger thead th:nth-child(3){white-space:normal;word-break:keep-all;overflow-wrap:normal;}
+    .ledger thead th{letter-spacing:.02em;}
     .ledger .subj{line-height:1.25;overflow-wrap:normal;word-break:normal;hyphens:none;}
     .ledger td:nth-child(2){overflow-wrap:normal;word-break:normal;hyphens:none;}
     .ledger td:nth-child(3) .grade-pill{white-space:nowrap;font-size:10px;padding:3px 6px;}
@@ -374,6 +377,18 @@
     .lesson{padding:5px 5px;font-size:9.5px;line-height:1.25;overflow-wrap:break-word;word-break:normal;hyphens:none;}
     .lesson b{font-size:10px;line-height:1.2;}
     .lesson .rm{font-size:9px;line-height:1.2;}
+
+
+    .main-topbar{display:none;}
+    .mobile-topbar{display:flex;align-items:center;justify-content:space-between;margin:-4px 0 14px;padding:0 2px;}
+    .mobile-brand{display:flex;align-items:center;gap:9px;min-width:0;}
+    .mobile-brand img{width:38px;height:38px;object-fit:contain;}
+    .mobile-brand span{font:600 13px 'IBM Plex Sans';color:#E7E2D8;}
+    .mobile-actions{display:flex;gap:2px;position:relative;}
+    .mobile-actions .top-action{width:35px;height:35px;}
+    .mobile-actions .notif-panel{position:fixed;right:12px;top:66px;width:min(310px,calc(100vw - 24px));}
+    .nav-btn.active{box-shadow:none;background:rgba(255,255,255,.075);}
+    .nav-btn.active .nav-icon{filter:drop-shadow(0 0 6px rgba(231,180,63,.16));}
 
     .exam{grid-template-columns:48px 1fr;row-gap:6px;}
     .exam .fmt{grid-column:2;justify-self:start;}
@@ -401,16 +416,44 @@
     </div>
 
     <nav>
-      <button class="nav-btn active" data-view="dash"><span class="dot"></span>Главная</button>
-      <button class="nav-btn" data-view="grades"><span class="dot"></span>Зачётная<br class="nav-break"> книжка</button>
-      <button class="nav-btn" data-view="schedule"><span class="dot"></span>Расписание</button>
-      <button class="nav-btn" data-view="map"><span class="dot"></span>Карта<br class="nav-break"> кампуса</button>
+      <button class="nav-btn active" data-view="dash"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9"></path><path d="M9 20v-6h6v6"></path></svg></span><span>Главная</span></button>
+      <button class="nav-btn" data-view="grades"><span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 7h8M8 11h8M8 15h5"></path></svg></span><span>Зачётная<br class="nav-break"> книжка</span></button>
+      <button class="nav-btn" data-view="schedule"><span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 9h16"></path><path d="M8 13h3M13 13h3M8 17h3"></path></svg></span><span>Расписание</span></button>
+      <button class="nav-btn" data-view="map"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></span><span>Карта<br class="nav-break"> кампуса</span></button>
     </nav>
 
     <div class="sidebar-foot">Осенний семестр 2026 · обновлено сегодня</div>
   </aside>
 
   <main>
+    <div class="mobile-topbar">
+      <div class="mobile-brand"><img src="vmk-logo-yellow.png" alt="ВМК"><span>МГУ · ВМК</span></div>
+      <div class="mobile-actions">
+        <button class="top-action" type="button" aria-label="Поиск"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg></button>
+        <div style="position:relative"><button class="top-action" id="mobile-notif-btn" type="button" aria-label="Уведомления" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><span class="notif-dot">3</span></button>
+          <div class="notif-panel mobile-notif-panel" id="mobile-notif-panel">
+            <div class="notif-title">Уведомления</div>
+            <div class="notif-item"><i class="ni-dot"></i><div><b>Контрольная по матанализу</b><span>5 сентября · не забудьте подготовиться</span></div></div>
+            <div class="notif-item"><i class="ni-dot"></i><div><b>Практическое задание № 2</b><span>12 сентября · Практикум на ЭВМ</span></div></div>
+            <div class="notif-item"><i class="ni-dot"></i><div><b>В расписании есть обновление</b><span>Проверьте занятия на этой неделе</span></div></div>
+          </div>
+        </div>
+        <button class="top-action" type="button" aria-label="Профиль"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 20c.8-3.2 3.1-5 6.5-5s5.7 1.8 6.5 5"></path></svg></button>
+      </div>
+    </div>
+    <div class="main-topbar">
+      <button class="top-action" type="button" aria-label="Поиск"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg></button>
+      <div style="position:relative">
+        <button class="top-action" id="notif-btn" type="button" aria-label="Уведомления" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><span class="notif-dot">3</span></button>
+        <div class="notif-panel" id="notif-panel">
+          <div class="notif-title">Уведомления</div>
+          <div class="notif-item"><i class="ni-dot"></i><div><b>Контрольная по матанализу</b><span>5 сентября · не забудьте подготовиться</span></div></div>
+          <div class="notif-item"><i class="ni-dot"></i><div><b>Практическое задание № 2</b><span>12 сентября · Практикум на ЭВМ</span></div></div>
+          <div class="notif-item"><i class="ni-dot"></i><div><b>В расписании есть обновление</b><span>Проверьте занятия на этой неделе</span></div></div>
+        </div>
+      </div>
+      <button class="top-action" type="button" aria-label="Профиль"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 20c.8-3.2 3.1-5 6.5-5s5.7 1.8 6.5 5"></path></svg></button>
+    </div>
 
     <!-- ================= DASHBOARD ================= -->
     <section class="view active" id="view-dash">
@@ -631,7 +674,7 @@
 
   // ---------- schedule calendar ----------
   // На компьютере — целая неделя (Пн–Вс).
-  // На телефоне — по 3 дня внутри той же недели.
+  // На телефоне — по 3 дня (Пн–Ср / Чт–Сб), воскресенья нет.
   const times = ['09:00','10:45','13:00','14:45','16:30'];
 
   const weeklyLessons = {
@@ -678,8 +721,9 @@
     if(!fullWeek || !fullWeek.length) return;
 
     const isMobile = window.matchMedia('(max-width: 860px)').matches;
+    const mobileWeek = fullWeek.slice(0, 6); // Пн–Сб, воскресенье скрыто только на телефоне.
     const visibleDays = isMobile
-      ? fullWeek.slice(mobileDayOffset, mobileDayOffset + 3)
+      ? mobileWeek.slice(mobileDayOffset, mobileDayOffset + 3)
       : fullWeek;
 
     if(isMobile && !visibleDays.length){
@@ -709,7 +753,7 @@
 
     if(isMobile){
       const atFirst = weekIndex === 0 && mobileDayOffset === 0;
-      const atLast = weekIndex === weeks.length-1 && mobileDayOffset + 3 >= fullWeek.length;
+      const atLast = weekIndex === weeks.length-1 && mobileDayOffset + 3 >= mobileWeek.length;
       document.getElementById('week-prev').disabled = atFirst;
       document.getElementById('week-next').disabled = atLast;
     }else{
@@ -737,7 +781,7 @@
     const isMobile = window.matchMedia('(max-width: 860px)').matches;
     const fullWeek = weeks[weekIndex];
     if(isMobile){
-      if(mobileDayOffset + 3 < fullWeek.length){
+      if(mobileDayOffset + 3 < 6){
         mobileDayOffset += 3;
       }else if(weekIndex < weeks.length-1){
         weekIndex++;
@@ -799,6 +843,36 @@
         ${r.steps.map((s,i)=>`<div class="route-step"><span class="n">${i+1}</span><span>${s}</span></div>`).join('')}
       `;
     });
+  });
+
+
+  // ---------- notifications ----------
+  const notifBtn = document.getElementById('notif-btn');
+  const notifPanel = document.getElementById('notif-panel');
+  const mobileNotifBtn = document.getElementById('mobile-notif-btn');
+  function toggleNotifications(btn){
+    if(!notifPanel) return;
+    const open = !notifPanel.classList.contains('open');
+    notifPanel.classList.toggle('open', open);
+    btn?.setAttribute('aria-expanded', String(open));
+  }
+  notifBtn?.addEventListener('click', e=>{e.stopPropagation();toggleNotifications(notifBtn);});
+  const mobileNotifPanel = document.getElementById('mobile-notif-panel');
+  mobileNotifBtn?.addEventListener('click', e=>{
+    e.stopPropagation();
+    const open = !mobileNotifPanel?.classList.contains('open');
+    mobileNotifPanel?.classList.toggle('open', open);
+    mobileNotifBtn?.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', e=>{
+    if(notifPanel && !e.target.closest('.notif-panel') && !e.target.closest('#notif-btn') && !e.target.closest('#mobile-notif-btn')){
+      notifPanel.classList.remove('open');
+      notifBtn?.setAttribute('aria-expanded','false');
+    }
+    if(mobileNotifPanel && !e.target.closest('#mobile-notif-panel') && !e.target.closest('#mobile-notif-btn')){
+      mobileNotifPanel.classList.remove('open');
+      mobileNotifBtn?.setAttribute('aria-expanded','false');
+    }
   });
 
   // ---------- PWA: service worker ----------
