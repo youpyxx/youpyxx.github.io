@@ -973,7 +973,7 @@
     document.getElementById('login-error').textContent=''; document.getElementById('register-error').textContent='';
   }
   loginTab?.addEventListener('click',()=>switchAuth('login')); registerTab?.addEventListener('click',()=>switchAuth('register'));
-  const eyeOpen=`${open_eye}`; const eyeClosed=`${closed_eye}`;
+  const eyeOpen='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>'; const eyeClosed='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.9 10.9 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.1 3.7"></path><path d="M6.1 8.2C3.7 9.9 2.5 12 2.5 12s3.5 6 9.5 6c1.3 0 2.5-.3 3.6-.8"></path></svg>';
   document.querySelectorAll('.auth-eye').forEach(btn=>btn.addEventListener('click',()=>{
     const i=document.getElementById(btn.dataset.target); const visible=i.type==='password'; i.type=visible?'text':'password';
     btn.dataset.visible=String(visible); btn.innerHTML=visible?eyeOpen:eyeClosed; btn.setAttribute('aria-label',visible?'Скрыть пароль':'Показать пароль');
