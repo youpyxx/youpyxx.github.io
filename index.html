@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Личный кабинет студента — МГУ ВМК</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#17213A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Кабинет">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17213A;
+    --ink-soft:#2B3854;
+    --paper:#F6F4EF;
+    --paper-2:#FFFFFF;
+    --paper-3:#FBFAF6;
+    --text-primary:var(--ink);
+    --gold:#96793F;
+    --gold-deep:#6B5730;
+    --gold-soft:#EDE6D8;
+    --oxblood:#6B3733;
+    --oxblood-soft:#EAE0DE;
+    --sage:#455C4C;
+    --sage-soft:#E1E5DF;
+    --blue:#3E5F86;
+    --blue-soft:#EAF0F8;
+    --slate:#666F7D;
+    --line:#DEDACD;
+    --line-strong:#C7C0AC;
+    --radius:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#1B1917;
+      --paper-2:#242220;
+      --paper-3:#2B2825;
+      --text-primary:#EDE9E0;
+      --gold:#C9A255;
+      --gold-deep:#E0BE7D;
+      --gold-soft:#332B1C;
+      --oxblood:#D08A83;
+      --oxblood-soft:#3A2420;
+      --sage:#8FAE97;
+      --sage-soft:#212A22;
+      --blue:#7FA5CE;
+      --blue-soft:#1C2A3B;
+      --slate:#A39C8E;
+      --line:rgba(255,255,255,.09);
+      --line-strong:rgba(255,255,255,.18);
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--text-primary);
+    font-family:'IBM Plex Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;}
+  .app{
+    display:grid;
+    grid-template-columns:248px 1fr;
+    min-height:100vh;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    background:var(--ink);
+    color:#EDE9DD;
+    padding:28px 20px;
+    display:flex;
+    flex-direction:column;
+    position:sticky;
+    top:0;
+    height:100vh;
+  }
+  .seal{
+    width:44px;height:44px;border-radius:50%;
+    border:1.5px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:600;font-size:16px;
+    color:var(--gold);
+    margin-bottom:14px;
+  }
+  .uni-name{font-size:12px;letter-spacing:.04em;color:#B9B2A0;line-height:1.4;margin:0 0 26px;}
+  .card-id{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:var(--radius);
+    padding:14px;
+    margin-bottom:28px;
+  }
+  .avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:var(--gold);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:14px;margin-bottom:10px;
+  }
+  .card-id .name{font-size:14px;font-weight:600;margin:0 0 2px;}
+  .card-id .meta{font-size:12px;color:#B9B2A0;margin:0;}
+  nav{display:flex;flex-direction:column;gap:4px;flex:1;}
+  .nav-btn{
+    all:unset;
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:8px;
+    font-size:14px;cursor:pointer;color:#D9D4C6;
+    transition:background .15s ease;
+  }
+  .nav-btn:hover{background:rgba(255,255,255,.06);}
+  .nav-btn.active{background:rgba(176,132,44,.16);color:#F3E6C6;}
+  .nav-btn .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:0;}
+  .nav-btn.active .dot{opacity:1;}
+  .nav-btn .nav-break{display:none;}
+  .sidebar-foot{font-size:11px;color:#7C7663;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);margin-top:14px;}
+
+  /* ---------- MAIN ---------- */
+  main{padding:36px 44px;max-width:920px;}
+  .view{display:none;}
+  .view.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  .page-head{margin-bottom:28px;}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;margin:0 0 6px;}
+  .page-head h1{font-size:28px;font-weight:600;margin:0;color:var(--text-primary);}
+  .page-head p{color:var(--slate);font-size:14px;margin:8px 0 0;max-width:520px;}
+
+  /* ---- dashboard grid ---- */
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+  .stat{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 16px 14px;
+  }
+  .stat .num{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--text-primary);}
+  .stat .lbl{font-size:12px;color:var(--slate);margin-top:2px;}
+
+  .two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:start;}
+  .panel{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;
+  }
+  .panel h3{font-size:15px;font-weight:600;margin:0 0 14px;color:var(--text-primary);}
+  .today-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;
+  }
+  .today-row:last-child{border-bottom:none;}
+  .today-time{font-family:'IBM Plex Mono',monospace;color:var(--slate);width:76px;flex-shrink:0;}
+  .today-info b{font-weight:500;}
+  .today-room{font-size:12px;color:var(--slate);}
+
+  .deadline{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:11px 0;border-bottom:1px solid var(--line);
+  }
+  .deadline:last-child{border-bottom:none;}
+  .deadline .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:var(--oxblood-soft);color:var(--oxblood);
+    padding:3px 7px;border-radius:5px;white-space:nowrap;margin-top:1px;
+  }
+  .deadline .txt{font-size:13.5px;line-height:1.4;}
+  .deadline .txt .sub{color:var(--slate);font-size:12px;}
+
+  /* ---- зачётка (grades) ---- */
+  .semester-tabs{display:flex;gap:6px;margin-bottom:18px;}
+  .sem-btn{
+    all:unset;cursor:pointer;font-size:13px;padding:7px 14px;border-radius:20px;
+    border:1px solid var(--line-strong);color:var(--slate);
+  }
+  .sem-btn.active{background:var(--ink);color:#F3E6C6;border-color:var(--ink);}
+
+  .ledger{width:100%;border-collapse:collapse;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+  .ledger thead th{
+    text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--slate);font-weight:500;padding:12px 16px;border-bottom:1px solid var(--line-strong);
+    background:var(--paper-3);
+  }
+  .ledger tbody td{padding:13px 16px;font-size:13.5px;border-bottom:1px solid var(--line);}
+  .ledger tbody tr:last-child td{border-bottom:none;}
+  .ledger .subj{font-weight:500;}
+  .ledger .form{color:var(--slate);font-size:12px;}
+  .grade-pill{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:500;
+    padding:3px 10px;border-radius:20px;display:inline-block;
+  }
+  .grade-pill.pass{background:var(--sage-soft);color:var(--sage);}
+  .grade-pill.mid{background:var(--gold-soft);color:var(--gold-deep);}
+  .grade-pill.pending{background:var(--paper-3);color:var(--slate);}
+  .gpa-box{
+    margin-top:18px;display:flex;align-items:baseline;gap:10px;
+    padding:16px 20px;background:var(--ink);border-radius:var(--radius);color:#EDE9DD;
+  }
+  .gpa-box .num{font-family:'Fraunces',serif;font-size:30px;font-weight:600;color:var(--gold);}
+  .gpa-box .lbl{font-size:12.5px;color:#B9B2A0;}
+
+  /* ---- расписание ---- */
+  .sched-toggle{display:flex;gap:6px;margin-bottom:18px;}
+  .subview{display:none;}
+  .subview.active{display:block;}
+
+  .week-pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
+  .week-page-btn{border:1px solid var(--line-strong);background:var(--paper-2);color:var(--text-primary);border-radius:8px;padding:7px 11px;font:500 11px 'IBM Plex Sans',sans-serif;cursor:pointer;}
+  .week-page-btn:disabled{opacity:.35;cursor:default;}
+  .week-range{flex:1;text-align:center;font-size:11px;color:var(--slate);line-height:1.3;}
+  .week-day-date{display:block;font-size:9px;font-weight:500;margin-top:2px;color:var(--slate);}
+  .week-grid{
+    display:grid;grid-template-columns:64px repeat(3,minmax(0,1fr));
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  }
+  .week-grid .cell{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:8px 8px;min-height:56px;}
+  .week-grid .cell:last-child{border-right:none;}
+  .week-grid .head{
+    background:var(--paper-3);font-size:11.5px;font-weight:500;color:var(--slate);
+    text-align:center;padding:10px 4px;
+  }
+  .week-grid .time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);text-align:right;padding-top:9px;}
+  .lesson{
+    background:var(--sage-soft);border-left:2.5px solid var(--sage);border-radius:4px;
+    padding:5px 7px;font-size:11px;line-height:1.35;
+  }
+  .lesson.lecture{background:var(--blue-soft);border-left-color:var(--blue);}
+  .lesson b{display:block;font-weight:600;font-size:11.5px;margin-bottom:2px;}
+  .lesson .rm{color:var(--slate);}
+  /* Цветовая маркировка дисциплин — только в расписании. Цвета приглушённые. */
+  .lesson.discipline-math{background:#E6D8B8;border-left-color:#9B7934;}
+  .lesson.discipline-foreign{background:#DCC5C2;border-left-color:#7D4741;}
+  .lesson.discipline-history{background:#E5D7AE;border-left-color:#9A7B36;}
+  .lesson.discipline-algebra{background:#C9D4E2;border-left-color:#506E91;}
+  .lesson.discipline-algorithms{background:#C8D3CA;border-left-color:#58705E;}
+  .lesson.discipline-practicum{background:#D6CEDA;border-left-color:#75627E;}
+  .lesson.discipline-safety{background:#D6D4CF;border-left-color:#6D6B65;}
+  .lesson.discipline-civics{background:#DED2C2;border-left-color:#866A4A;}
+  .lesson.discipline-pe{background:#C9D8D5;border-left-color:#587B73;}
+
+  @media (prefers-color-scheme: dark){
+    .lesson.discipline-math{background:#3A311F;border-left-color:#B08A3F;}
+    .lesson.discipline-foreign{background:#392421;border-left-color:#92574F;}
+    .lesson.discipline-history{background:#3A331F;border-left-color:#A38743;}
+    .lesson.discipline-algebra{background:#233044;border-left-color:#6485AD;}
+    .lesson.discipline-algorithms{background:#263129;border-left-color:#6B866F;}
+    .lesson.discipline-practicum{background:#312B35;border-left-color:#88739A;}
+    .lesson.discipline-safety{background:#302F2B;border-left-color:#858078;}
+    .lesson.discipline-civics{background:#332C25;border-left-color:#967452;}
+    .lesson.discipline-pe{background:#263432;border-left-color:#6B9188;}
+    .lesson.discipline-math,.lesson.discipline-foreign,.lesson.discipline-history,
+    .lesson.discipline-algebra,.lesson.discipline-algorithms,.lesson.discipline-practicum,
+    .lesson.discipline-safety,.lesson.discipline-civics,.lesson.discipline-pe{color:#EEE9DE;}
+    .lesson .rm{color:#BDB6A8;}
+  }
+
+
+  .exam-list{display:flex;flex-direction:column;gap:10px;}
+  .exam{
+    display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;
+  }
+  .exam .date{text-align:center;}
+  .exam .date .d{font-family:'Fraunces',serif;font-size:20px;font-weight:600;line-height:1;}
+  .exam .date .m{font-size:10.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;}
+  .exam .info b{font-size:14px;font-weight:500;}
+  .exam .info .sub{font-size:12px;color:var(--slate);margin-top:2px;}
+  .exam .fmt{
+    font-size:11px;padding:4px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .fmt.exam-t{background:var(--oxblood-soft);color:var(--oxblood);}
+  .fmt.zachet{background:var(--sage-soft);color:var(--sage);}
+
+  /* ---- карта ---- */
+  .map-wrap{display:grid;grid-template-columns:1fr 260px;gap:20px;align-items:start;}
+  .map-canvas{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px;
+  }
+  .bld{cursor:pointer;transition:opacity .15s;}
+  .bld:hover{opacity:.85;}
+  .bld-label{font-size:10.5px;font-family:'IBM Plex Sans',sans-serif;fill:var(--text-primary);font-weight:500;pointer-events:none;}
+  .path-line{stroke:var(--line-strong);stroke-width:2;stroke-dasharray:4 4;fill:none;}
+  .you-pin{fill:var(--oxblood);}
+
+  .route-panel{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;min-height:340px;
+  }
+  .route-panel h3{font-size:14px;margin:0 0 4px;}
+  .route-panel .badge{
+    font-size:11px;color:var(--gold-deep);font-weight:600;text-transform:uppercase;letter-spacing:.04em;
+  }
+  .route-step{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+  .route-step:last-child{border-bottom:none;}
+  .route-step .n{
+    width:18px;height:18px;border-radius:50%;background:var(--ink);color:#EDE9DD;
+    font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+  }
+  .route-empty{color:var(--slate);font-size:13px;line-height:1.6;}
+  .legend{display:flex;gap:14px;margin-top:12px;font-size:11px;color:var(--slate);flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .legend i{width:8px;height:8px;border-radius:2px;display:inline-block;}
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 860px){
+    .app{grid-template-columns:1fr;}
+
+    .sidebar{
+      position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;
+      flex-direction:row;align-items:center;
+      padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+      z-index:50;border-top:1px solid rgba(255,255,255,.1);
+    }
+    .seal,.uni-name,.card-id,.sidebar-foot{display:none;}
+    nav{flex-direction:row;justify-content:space-around;width:100%;gap:4px;}
+    .nav-btn{
+      flex-direction:column;gap:4px;font-size:13px;line-height:1.15;
+      padding:10px 4px;text-align:center;flex:1;min-height:64px;
+      justify-content:center;border-radius:12px;font-weight:500;
+    }
+    .nav-btn .nav-break{display:inline;}
+    .nav-btn .dot{display:none;}
+    .nav-btn.active{background:rgba(255,255,255,.1);color:#F3E6C6;}
+
+    main{padding:20px 12px calc(84px + env(safe-area-inset-bottom));max-width:100%;min-width:0;overflow-x:hidden;}
+    .page-head h1{font-size:22px;}
+
+    .stat-row{grid-template-columns:1fr 1fr;gap:10px;}
+    .two-col{grid-template-columns:1fr;}
+    .map-wrap{grid-template-columns:1fr;}
+
+    /* Никакой горизонтальной прокрутки на телефоне. */
+    .ledger{
+      width:100%;display:table;table-layout:fixed;
+      white-space:normal;overflow:hidden;
+      border-collapse:separate;border-spacing:0;
+    }
+    .ledger thead,.ledger tbody{display:table-row-group;width:100%;min-width:0;}
+    .ledger tr{display:table-row;}
+    .ledger th,.ledger td{
+      padding:9px 6px;vertical-align:middle;min-width:0;
+      overflow-wrap:break-word;word-break:normal;hyphens:auto;
+    }
+    .ledger th{font-size:9.5px;line-height:1.2;}
+    .ledger th:nth-child(1),.ledger td:nth-child(1){width:37%;}
+    .ledger th:nth-child(2),.ledger td:nth-child(2){width:21%;}
+    .ledger th:nth-child(3),.ledger td:nth-child(3){width:27%;}
+    .ledger th:nth-child(4),.ledger td:nth-child(4){width:15%;text-align:center;}
+    .ledger .subj{line-height:1.25;}
+    .ledger .form{line-height:1.25;white-space:normal;}
+
+    /* На экране одновременно только 3 дня. */
+    #sub-week{overflow:visible;}
+    .week-grid{
+      width:100%;min-width:0;overflow:hidden;
+      grid-template-columns:42px repeat(3,minmax(0,1fr));
+    }
+    .week-grid .cell{min-width:0;overflow:hidden;}
+    .week-grid .head{font-size:10px;padding:8px 3px;line-height:1.25;}
+    .week-grid .time{font-size:9.5px;padding:8px 3px 0 0;}
+    .week-day-date{display:block;font-size:9px;font-weight:500;margin-top:2px;color:var(--slate);}
+    .lesson{padding:5px 5px;font-size:9.5px;line-height:1.25;overflow-wrap:anywhere;word-break:break-word;}
+    .lesson b{font-size:10px;line-height:1.2;}
+    .lesson .rm{font-size:9px;line-height:1.2;}
+
+    .exam{grid-template-columns:48px 1fr;row-gap:6px;}
+    .exam .fmt{grid-column:2;justify-self:start;}
+
+    .gpa-box{flex-wrap:wrap;}
+  }
+
+  @media (max-width: 420px){
+    .stat-row{grid-template-columns:1fr 1fr;}
+    .nav-btn{font-size:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="seal">ВМК</div>
+    <p class="uni-name">МГУ имени М.В. Ломоносова<br>факультет ВМК</p>
+
+    <div class="card-id">
+      <div class="avatar">ЕД</div>
+      <p class="name">Ермолаева Дарья</p>
+      <p class="meta">ВМК · 1 курс, гр. 107</p>
+    </div>
+
+    <nav>
+      <button class="nav-btn active" data-view="dash"><span class="dot"></span>Главная</button>
+      <button class="nav-btn" data-view="grades"><span class="dot"></span>Зачётная<br class="nav-break"> книжка</button>
+      <button class="nav-btn" data-view="schedule"><span class="dot"></span>Расписание</button>
+      <button class="nav-btn" data-view="map"><span class="dot"></span>Карта<br class="nav-break"> кампуса</button>
+    </nav>
+
+    <div class="sidebar-foot">Осенний семестр 2026 · обновлено сегодня</div>
+  </aside>
+
+  <main>
+
+    <!-- ================= DASHBOARD ================= -->
+    <section class="view active" id="view-dash">
+      <div class="page-head">
+        <p class="eyebrow">С возвращением</p>
+        <h1>Здравствуйте, Дарья</h1>
+        <p>Коротко о том, что происходит на этой неделе — пары, ближайшие дедлайны и статус по дисциплинам семестра.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><div class="num">9</div><div class="lbl">дисциплин в семестре</div></div>
+        <div class="stat"><div class="num">14</div><div class="lbl">пар на неделе</div></div>
+        <div class="stat"><div class="num">6</div><div class="lbl">без отметки</div></div>
+        <div class="stat"><div class="num">132</div><div class="lbl">дня до сессии</div></div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>Сегодня, вторник</h3>
+          <div class="today-row">
+            <span class="today-time">09:00</span>
+            <span class="today-info"><b>Алгебра и геометрия</b><br><span class="today-room">лекция · корпус ВМК, ауд. 685</span></span>
+          </div>
+          <div class="today-row">
+            <span class="today-time">10:45</span>
+            <span class="today-info"><b>Иностранный язык</b><br><span class="today-room">практика · корпус ВМК, ауд. 434</span></span>
+          </div>
+          <div class="today-row">
+            <span class="today-time">13:00</span>
+            <span class="today-info"><b>Математический анализ</b><br><span class="today-room">семинар · корпус ВМК, ауд. 550</span></span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Ближайшие дедлайны</h3>
+          <div class="deadline">
+            <span class="tag">5 сен</span>
+            <span class="txt">Контрольная работа № 1<br><span class="sub">Математический анализ</span></span>
+          </div>
+          <div class="deadline">
+            <span class="tag">12 сен</span>
+            <span class="txt">Практическое задание № 2<br><span class="sub">Практикум на ЭВМ</span></span>
+          </div>
+          <div class="deadline">
+            <span class="tag">20 сен</span>
+            <span class="txt">Эссе по теме семинара<br><span class="sub">История России</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GRADES ================= -->
+    <section class="view" id="view-grades">
+      <div class="page-head">
+        <p class="eyebrow">Успеваемость · 1 семестр</p>
+        <h1>Зачётная книжка</h1>
+        <p>Дисциплины первого семестра и форма контроля по каждой. Отметки появляются по мере сдачи текущих и итоговых работ.</p>
+      </div>
+
+      <table class="ledger">
+        <thead>
+          <tr><th>Дисциплина</th><th>Форма контроля</th><th>Преподаватель</th><th>Отметка</th></tr>
+        </thead>
+        <tbody id="grades-body"></tbody>
+      </table>
+
+      <div class="gpa-box">
+        <span class="num" id="gpa-num">3 / 9</span>
+        <span class="lbl">дисциплин уже с отметкой, остальное — по итогам сессии в январе</span>
+      </div>
+    </section>
+
+    <!-- ================= SCHEDULE ================= -->
+    <section class="view" id="view-schedule">
+      <div class="page-head">
+        <p class="eyebrow">Учебный процесс</p>
+        <h1>Расписание и сессия</h1>
+        <p>Недельная сетка пар и отдельный список зачётов и экзаменов сессии с датами, форматом и аудиториями.</p>
+      </div>
+
+      <div class="sched-toggle">
+        <button class="sem-btn active" data-sub="week">Расписание пар</button>
+        <button class="sem-btn" data-sub="session">Сессия: зачёты и экзамены</button>
+      </div>
+
+      <div class="subview active" id="sub-week">
+        <div class="week-pager">
+          <button class="week-page-btn" id="week-prev" type="button">← Назад</button>
+          <div class="week-range" id="week-range"></div>
+          <button class="week-page-btn" id="week-next" type="button">Вперёд →</button>
+        </div>
+        <div class="week-grid" id="week-grid"></div>
+      </div>
+
+      <div class="subview" id="sub-session">
+        <div class="exam-list" id="exam-list"></div>
+      </div>
+    </section>
+
+    <!-- ================= MAP ================= -->
+    <section class="view" id="view-map">
+      <div class="page-head">
+        <p class="eyebrow">Ориентация на местности</p>
+        <h1>Карта кампуса</h1>
+        <p>Нажмите на здание, чтобы увидеть, как до него добраться и что там находится.</p>
+      </div>
+
+      <div class="map-wrap">
+        <div class="map-canvas">
+          <svg viewBox="0 0 560 380" width="100%" id="campus-svg">
+            <!-- paths -->
+            <path class="path-line" d="M 120 300 L 120 200 L 230 200"/>
+            <path class="path-line" d="M 230 200 L 230 110"/>
+            <path class="path-line" d="M 230 200 L 360 200 L 360 260"/>
+            <path class="path-line" d="M 360 200 L 460 200 L 460 120"/>
+            <path class="path-line" d="M 120 200 L 120 120"/>
+
+            <!-- you are here -->
+            <circle class="you-pin" cx="120" cy="300" r="6"/>
+            <text x="132" y="304" class="bld-label" style="font-weight:600">Вы здесь · главный вход</text>
+
+            <!-- building 1: humanities block -->
+            <g class="bld" data-b="c1">
+              <rect x="70" y="60" width="100" height="60" rx="4" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.4"/>
+              <text x="120" y="94" text-anchor="middle" class="bld-label">1-й корпус</text>
+              <text x="120" y="108" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">гуманитарные</text>
+            </g>
+
+            <!-- building 2: VMK -->
+            <g class="bld" data-b="c2">
+              <rect x="180" y="60" width="110" height="60" rx="4" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.4"/>
+              <text x="235" y="94" text-anchor="middle" class="bld-label">Корпус ВМК</text>
+              <text x="235" y="108" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">учебный</text>
+            </g>
+
+            <!-- library -->
+            <g class="bld" data-b="lib">
+              <rect x="180" y="170" width="100" height="60" rx="4" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="1.4"/>
+              <text x="230" y="204" text-anchor="middle" class="bld-label">Библиотека</text>
+              <text x="230" y="218" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">фундаментальная</text>
+            </g>
+
+            <!-- corpus 3 / sport -->
+            <g class="bld" data-b="c3">
+              <rect x="310" y="230" width="100" height="60" rx="4" fill="var(--oxblood-soft)" stroke="var(--oxblood)" stroke-width="1.4"/>
+              <text x="360" y="264" text-anchor="middle" class="bld-label">Спорткомплекс</text>
+              <text x="360" y="278" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">физкультура</text>
+            </g>
+
+            <!-- main building / dean's office -->
+            <g class="bld" data-b="adm">
+              <rect x="410" y="60" width="100" height="60" rx="4" fill="var(--paper-3)" stroke="var(--slate)" stroke-width="1.4"/>
+              <text x="460" y="94" text-anchor="middle" class="bld-label">Главное здание</text>
+              <text x="460" y="108" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">деканат ВМК</text>
+            </g>
+          </svg>
+          <div class="legend">
+            <span><i style="background:var(--blue)"></i>учебные корпуса</span>
+            <span><i style="background:var(--gold)"></i>библиотека</span>
+            <span><i style="background:var(--oxblood)"></i>спорт</span>
+            <span><i style="background:var(--slate)"></i>администрация</span>
+          </div>
+        </div>
+
+        <div class="route-panel" id="route-panel">
+          <p class="route-empty">Выберите здание на карте, чтобы построить маршрут от главного входа и узнать, что там находится.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ---------- navigation ----------
+  document.querySelectorAll('.nav-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    });
+  });
+
+  // ---------- grades data ----------
+  const grades = [
+    {s:'Матанализ',f:'экзамен',t:'Фадеев Р.С.',g:'—',cls:'pending'},
+    {s:'Алгебра и геометрия',f:'экзамен',t:'Кузьмина О.А.',g:'—',cls:'pending'},
+    {s:'Алгоритмы и языки',f:'зачёт с оценкой',t:'Смирнов В.П.',g:'—',cls:'pending'},
+    {s:'Практикум на ЭВМ',f:'зачёт',t:'Смирнов В.П.',g:'—',cls:'pending'},
+    {s:'История России',f:'зачёт',t:'Громова Т.В.',g:'—',cls:'pending'},
+    {s:'Безопасность жизнедеятельности',f:'зачёт',t:'Быков А.Н.',g:'—',cls:'pending'},
+    {s:'Основы российской государственности',f:'зачёт',t:'Дорохова Е.И.',g:'зачтено',cls:'pass'},
+    {s:'Иностранный язык',f:'зачёт',t:'Орлова М.С.',g:'зачтено',cls:'pass'},
+    {s:'Физическая культура',f:'зачёт',t:'Быков А.Н.',g:'зачтено',cls:'pass'},
+  ];
+
+  function renderGrades(){
+    const body = document.getElementById('grades-body');
+    body.innerHTML = grades.map(r=>`
+      <tr>
+        <td class="subj">${r.s}</td>
+        <td class="form">${r.f}</td>
+        <td>${r.t}</td>
+        <td><span class="grade-pill ${r.cls}">${r.g}</span></td>
+      </tr>`).join('');
+  }
+  renderGrades();
+
+  // ---------- schedule toggle ----------
+  document.querySelectorAll('.sem-btn[data-sub]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.sem-btn[data-sub]').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.subview').forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('sub-'+btn.dataset.sub).classList.add('active');
+    });
+  });
+
+  // ---------- week grid ----------
+  // На одной странице показываем по 3 дня. Переключение — кнопками сверху.
+  const days = [
+    {short:'Пн', date:'31 авг'},
+    {short:'Вт', date:'1 сен'},
+    {short:'Ср', date:'2 сен'},
+    {short:'Чт', date:'3 сен'},
+    {short:'Пт', date:'4 сен'},
+    {short:'Сб', date:'5 сен'}
+  ];
+  const times = ['09:00','10:45','13:00','14:45','16:30'];
+  const lessons = {
+    '0-09:00':{n:'Матанализ',r:'ауд. 685',type:'discipline-math'},
+    '0-13:00':{n:'Практикум на ЭВМ',r:'ауд. 720',type:'discipline-practicum'},
+    '1-09:00':{n:'Алгебра и геометрия',r:'ауд. 685',type:'discipline-algebra'},
+    '1-10:45':{n:'Иностранный язык',r:'ауд. 434',type:'discipline-foreign'},
+    '1-13:00':{n:'Матанализ',r:'ауд. 550',type:'discipline-math'},
+    '2-09:00':{n:'История России',r:'ауд. 01',type:'discipline-history'},
+    '2-10:45':{n:'Практикум на ЭВМ',r:'ауд. 720',type:'discipline-practicum'},
+    '2-14:45':{n:'Физкультура',r:'спортзал',type:'discipline-pe'},
+    '3-09:00':{n:'Алгоритмы и языки',r:'ауд. 620',type:'discipline-algorithms'},
+    '3-10:45':{n:'Алгебра и геометрия',r:'ауд. 550',type:'discipline-algebra'},
+    '3-14:45':{n:'Безопасность жизнедеятельности',r:'ауд. 02',type:'discipline-safety'},
+    '4-09:00':{n:'Матанализ',r:'ауд. 685',type:'discipline-math'},
+    '4-13:00':{n:'Основы рос. государственности',r:'ауд. 01',type:'discipline-civics'},
+    '5-09:00':{n:'Алгоритмы и языки',r:'ауд. 620',type:'discipline-algorithms'},
+  };
+
+  let schedulePage = 0;
+  const pageSize = 3;
+
+  function renderWeek(){
+    const from = schedulePage * pageSize;
+    const visibleDays = days.slice(from, from + pageSize);
+    document.getElementById('week-range').textContent =
+      `${visibleDays[0].date} — ${visibleDays[visibleDays.length-1].date} 2026`;
+
+    let grid = '<div class="cell head"></div>';
+    visibleDays.forEach(d=>{
+      grid += `<div class="cell head">${d.short}<span class="week-day-date">${d.date}</span></div>`;
+    });
+
+    times.forEach(t=>{
+      grid += `<div class="cell time">${t}</div>`;
+      visibleDays.forEach((d,localI)=>{
+        const i = from + localI;
+        const les = lessons[i+'-'+t];
+        grid += `<div class="cell">${les ? `<div class="lesson ${les.type}"><b>${les.n}</b><span class="rm">${les.r}</span></div>` : ''}</div>`;
+      });
+    });
+
+    document.getElementById('week-grid').innerHTML = grid;
+    document.getElementById('week-prev').disabled = schedulePage === 0;
+    document.getElementById('week-next').disabled = from + pageSize >= days.length;
+  }
+
+  document.getElementById('week-prev').addEventListener('click',()=>{
+    if(schedulePage>0){schedulePage--;renderWeek();}
+  });
+  document.getElementById('week-next').addEventListener('click',()=>{
+    if((schedulePage+1)*pageSize<days.length){schedulePage++;renderWeek();}
+  });
+  renderWeek();
+
+  // ---------- session / exams ----------
+  const exams = [
+    {d:'15',m:'янв',subj:'Практикум на ЭВМ',sub:'ауд. 720, защита практических работ',fmt:'zachet',fl:'Зачёт'},
+    {d:'16',m:'янв',subj:'История России',sub:'ауд. 01, устно',fmt:'zachet',fl:'Зачёт'},
+    {d:'17',m:'янв',subj:'Безопасность жизнедеятельности',sub:'ауд. 02, тестирование',fmt:'zachet',fl:'Зачёт'},
+    {d:'20',m:'янв',subj:'Математический анализ',sub:'ауд. 685, письменно',fmt:'exam-t',fl:'Экзамен'},
+    {d:'23',m:'янв',subj:'Алгебра и геометрия',sub:'ауд. 685, письменно',fmt:'exam-t',fl:'Экзамен'},
+    {d:'26',m:'янв',subj:'Алгоритмы и языки',sub:'ауд. 620, устно + защита программ',fmt:'exam-t',fl:'Зачёт с оценкой'},
+  ];
+  document.getElementById('exam-list').innerHTML = exams.map(e=>`
+    <div class="exam">
+      <div class="date"><div class="d">${e.d}</div><div class="m">${e.m}</div></div>
+      <div class="info"><b>${e.subj}</b><div class="sub">${e.sub}</div></div>
+      <span class="fmt ${e.fmt}">${e.fl}</span>
+    </div>`).join('');
+
+  // ---------- campus map ----------
+  const routes = {
+    c1:{title:'1-й корпус — гуманитарные дисциплины',steps:[
+      'От главного входа идите прямо на север 90 м вдоль главной аллеи.',
+      'На развилке у библиотеки поверните налево.',
+      'Корпус будет справа, вход со стороны сквера.'],time:'≈ 4 мин пешком'},
+    c2:{title:'Корпус ВМК — учебные аудитории',steps:[
+      'От главного входа идите на север до площади у библиотеки.',
+      'Поверните направо и пройдите ещё 40 м.',
+      'Корпус ВМК — второе здание, вход с торца, ауд. 6xx и 4xx.'],time:'≈ 5 мин пешком'},
+    lib:{title:'Фундаментальная библиотека',steps:[
+      'От главного входа идите прямо на север 90 м.',
+      'Библиотека — здание прямо перед вами, у развилки.'],time:'≈ 3 мин пешком'},
+    c3:{title:'Спортивный комплекс',steps:[
+      'От главного входа идите на север до библиотеки.',
+      'Поверните направо, затем на первом повороте — направо ещё раз.',
+      'Зал находится в цокольном этаже, вход со двора.'],time:'≈ 6 мин пешком'},
+    adm:{title:'Главное здание — деканат ВМК',steps:[
+      'От главного входа идите на север до библиотеки, затем направо.',
+      'На площади у корпуса ВМК поверните направо и идите ещё 90 м на север.',
+      'Деканат ВМК — второй этаж, каб. 205.'],time:'≈ 7 мин пешком'},
+  };
+  document.querySelectorAll('.bld').forEach(g=>{
+    g.addEventListener('click',()=>{
+      const r = routes[g.dataset.b];
+      document.getElementById('route-panel').innerHTML = `
+        <span class="badge">${r.time}</span>
+        <h3>${r.title}</h3>
+        ${r.steps.map((s,i)=>`<div class="route-step"><span class="n">${i+1}</span><span>${s}</span></div>`).join('')}
+      `;
+    });
+  });
+
+  // ---------- PWA: service worker ----------
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    });
+  }
+</script>
+</body>
+</html>
