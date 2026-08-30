@@ -504,6 +504,37 @@
     .toast{bottom:96px;}
   }
 
+
+  /* ---------- FINAL MOBILE PROFILE / LIGHT SCHEDULE FIXES ---------- */
+  @media (max-width:860px){
+    .profile-panel{
+      top:calc(env(safe-area-inset-top) + 10px);
+      height:calc(100dvh - env(safe-area-inset-top) - 10px);
+      max-height:calc(100dvh - env(safe-area-inset-top) - 10px);
+      border-radius:16px 0 0 16px;
+      padding-top:18px;
+    }
+  }
+  @media (display-mode:standalone) and (max-width:860px){
+    .profile-panel{
+      top:calc(env(safe-area-inset-top) + 12px);
+      height:calc(100dvh - env(safe-area-inset-top) - 12px);
+      max-height:calc(100dvh - env(safe-area-inset-top) - 12px);
+    }
+  }
+  /* In the light theme schedule cards are deliberately soft/pastel.
+     This override comes after prefers-color-scheme so it wins even on dark-system phones. */
+  body.theme-light .lesson.discipline-math{background:#F0E4C8;border-left-color:#B8944A;color:#273044;}
+  body.theme-light .lesson.discipline-foreign{background:#EBCFCD;border-left-color:#9A5C58;color:#273044;}
+  body.theme-light .lesson.discipline-history{background:#F0E1B5;border-left-color:#B08D3F;color:#273044;}
+  body.theme-light .lesson.discipline-algebra{background:#D8E5F3;border-left-color:#6D8FB7;color:#273044;}
+  body.theme-light .lesson.discipline-algorithms{background:#D7E6DA;border-left-color:#718D76;color:#273044;}
+  body.theme-light .lesson.discipline-practicum{background:#E3D9E8;border-left-color:#9078A0;color:#273044;}
+  body.theme-light .lesson.discipline-safety{background:#E4E1D9;border-left-color:#8B877C;color:#273044;}
+  body.theme-light .lesson.discipline-civics{background:#E9DDCB;border-left-color:#9B7955;color:#273044;}
+  body.theme-light .lesson.discipline-pe{background:#D7E8E5;border-left-color:#719A93;color:#273044;}
+  body.theme-light .lesson .rm{color:#667085;}
+
 </style>
 </head>
 <body>
@@ -780,10 +811,7 @@
           <div class="setting-copy"><b>Напоминать о парах</b><span>За сколько минут до начала</span></div>
           <select id="reminder-time"><option value="10">10 мин</option><option value="30" selected>30 мин</option><option value="60">1 час</option></select>
         </div>
-        <div class="setting-row">
-          <div class="setting-copy"><b>Мобильные уведомления</b><span>Для iPhone нужен сайт на экране «Домой»</span></div>
-          <button class="setting-action" id="request-notifications" type="button">Разрешить</button>
-        </div>
+
         <div class="setting-row">
           <div class="setting-copy"><b>Установить приложение</b><span id="install-help-text">Добавить кабинет на экран «Домой»</span></div>
           <button class="setting-action" id="install-app-btn" type="button">Добавить</button>
