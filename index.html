@@ -606,13 +606,13 @@
         <button class="auth-tab active" id="auth-login-tab" type="button">Вход</button>
         <button class="auth-tab" id="auth-register-tab" type="button">Регистрация</button>
       </div>
-      <form class="auth-form active" id="login-form">
+      <form class="auth-form active" id="login-form" autocomplete="off">
         <label class="auth-field"><span>Номер студенческого билета</span><input id="login-student-id" inputmode="numeric" autocomplete="username" placeholder="Введите номер" required></label>
         <label class="auth-field auth-password"><span>Пароль</span><input id="login-password" type="password" autocomplete="current-password" placeholder="Введите пароль" required><button class="auth-eye" type="button" data-target="login-password" aria-label="Показать пароль" data-visible="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.9 10.9 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-3.1 3.7"></path><path d="M6.1 8.2C3.7 9.9 2.5 12 2.5 12s3.5 6 9.5 6c1.3 0 2.5-.3 3.6-.8"></path></svg></button></label>
         <div class="auth-error" id="login-error"></div>
         <button class="auth-submit" type="submit">Войти</button>
       </form>
-      <form class="auth-form" id="register-form">
+      <form class="auth-form" id="register-form" autocomplete="off">
         <label class="auth-field"><span>Фамилия</span><input id="reg-last" autocomplete="family-name" placeholder="Введите фамилию" required></label>
         <label class="auth-field"><span>Имя</span><input id="reg-first" autocomplete="given-name" placeholder="Введите имя" required></label>
         <label class="auth-field"><span>Отчество <em>(необязательно)</em></span><input id="reg-middle" autocomplete="additional-name" placeholder="Введите отчество"></label>
@@ -993,9 +993,26 @@
     setStudentName(user); startMainPage();
     window.setTimeout(()=>{document.body.classList.add('authenticated'); document.body.classList.remove('auth-transitioning'); showToast?.('Добро пожаловать!');},260);
   }
+  function clearAuthFields(){
+    [loginForm,registerForm].forEach(form=>form?.reset());
+    document.querySelectorAll('#login-form input,#register-form input').forEach(input=>{
+      input.value='';
+      input.setAttribute('value','');
+    });
+    document.querySelectorAll('.auth-eye').forEach(btn=>{
+      const input=document.getElementById(btn.dataset.target);
+      if(input) input.type='password';
+      btn.dataset.visible='false';
+      btn.innerHTML=eyeClosed;
+      btn.setAttribute('aria-label','Показать пароль');
+    });
+  }
   function logout(){
-    sessionStorage.removeItem(SESSION_KEY); document.body.classList.remove('authenticated','auth-transitioning');
-    switchAuth('login'); loginForm?.reset(); document.getElementById('login-password').value=''; closeProfile?.();
+    sessionStorage.removeItem(SESSION_KEY);
+    document.body.classList.remove('authenticated','auth-transitioning');
+    clearAuthFields();
+    switchAuth('login');
+    closeProfile?.();
   }
   loginForm?.addEventListener('submit',e=>{e.preventDefault(); const id=document.getElementById('login-student-id').value.trim(); const pass=document.getElementById('login-password').value; const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); const err=document.getElementById('login-error'); if(!saved){err.textContent='Профиль не найден. Сначала зарегистрируйтесь.';return;} if(id!==saved.studentId||pass!==saved.password){err.textContent='Неверный номер студенческого билета или пароль.';return;} finishLogin(saved);});
   registerForm?.addEventListener('submit',e=>{e.preventDefault(); const user={first:document.getElementById('reg-first').value.trim(),last:document.getElementById('reg-last').value.trim(),middle:document.getElementById('reg-middle').value.trim(),studentId:document.getElementById('reg-student-id').value.trim(),password:document.getElementById('reg-password').value}; const err=document.getElementById('register-error'); if(!/^\d{4,20}$/.test(user.studentId)){err.textContent='Номер студенческого билета должен содержать только цифры.';return;} if(user.password.length<8){err.textContent='Пароль должен содержать минимум 8 символов.';return;} if(user.password!==document.getElementById('reg-password2').value){err.textContent='Пароли не совпадают.';return;} const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null'); if(saved?.studentId===user.studentId){err.textContent='Этот номер студенческого билета уже зарегистрирован на этом устройстве.';return;} localStorage.setItem(AUTH_KEY,JSON.stringify(user)); finishLogin(user);});
