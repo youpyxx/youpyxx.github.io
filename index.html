@@ -157,13 +157,18 @@
   }
   .panel h3{font-size:15px;font-weight:600;margin:0 0 14px;color:var(--text-primary);}
   .today-row{
-    display:flex;justify-content:space-between;align-items:center;
+    display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:14px;align-items:start;
     padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;
   }
   .today-row:last-child{border-bottom:none;}
-  .today-time{font-family:'IBM Plex Mono',monospace;color:var(--slate);width:76px;flex-shrink:0;}
-  .today-info b{font-weight:500;}
-  .today-room{font-size:12px;color:var(--slate);}
+  .today-time{font-family:'IBM Plex Mono',monospace;color:var(--slate);width:auto;white-space:nowrap;}
+  .today-info{min-width:0;}
+  .today-info b{font-weight:500;display:block;margin-bottom:3px;}
+  .today-kind{display:block;font-size:10px;color:var(--gold-deep);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+  .today-teacher{display:block;color:var(--text-primary);line-height:1.35;}
+  .today-room{font-size:12px;color:var(--slate);margin-left:5px;}
+  .teacher-line{display:block;line-height:1.35;}
+  .teacher-room{color:var(--slate);white-space:nowrap;}
 
   .deadline{
     display:flex;gap:12px;align-items:flex-start;
@@ -241,8 +246,11 @@
     overflow-wrap:normal;word-break:normal;hyphens:none;
   }
   .lesson.lecture{background:var(--blue-soft);border-left-color:var(--blue);}
-  .lesson b{display:block;font-weight:600;font-size:11.5px;margin-bottom:2px;}
-  .lesson .rm{color:var(--slate);}
+  .lesson b{display:block;font-weight:600;font-size:11.5px;margin-bottom:3px;}
+  .lesson .lesson-kind{display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.035em;opacity:.72;margin-bottom:3px;}
+  .lesson .rm{color:var(--slate);display:block;line-height:1.35;}
+  .lesson .teacher-line{display:block;line-height:1.35;}
+  .lesson .teacher-room{color:inherit;opacity:.72;white-space:nowrap;}
   /* Цветовая маркировка дисциплин — только в расписании. Цвета приглушённые. */
   .lesson.discipline-math{background:#E6D8B8;border-left-color:#9B7934;}
   .lesson.discipline-foreign{background:#DCC5C2;border-left-color:#7D4741;}
@@ -318,6 +326,36 @@
   .legend span{display:inline-flex;align-items:center;gap:5px;}
   .legend i{width:8px;height:8px;border-radius:2px;display:inline-block;}
 
+  /* ---------- FLOOR MAP ---------- */
+  .floor-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px;}
+  .floor-tab,.map-action{border:1px solid var(--line);background:var(--paper-2);color:var(--text-primary);border-radius:12px;padding:10px 14px;font:inherit;cursor:pointer;transition:transform .12s,background .16s,border-color .16s,color .16s;}
+  .floor-tab:hover,.map-action:hover{transform:translateY(-1px);border-color:var(--gold);}
+  .floor-tab.active{background:var(--ink);border-color:var(--gold);color:var(--gold);}
+  .map-tools{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:14px;}
+  .room-search{display:flex;flex-direction:column;gap:5px;flex:1;min-width:220px;font-size:11px;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;}
+  .room-search input{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--paper-2);color:var(--text-primary);border-radius:11px;padding:11px 13px;font:inherit;text-transform:none;letter-spacing:0;outline:none;}
+  .room-search input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(203,157,59,.12);}
+  .map-action{white-space:nowrap;}
+  .map-action.secondary{background:transparent;}
+  .floor-map-wrap{grid-template-columns:minmax(0,1fr) 300px;}
+  .floor-map-canvas{padding:12px;overflow:hidden;}
+  .floor-title-row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:0 0 10px;padding:2px 2px 8px;border-bottom:1px solid var(--line);}
+  .floor-title-row b{display:block;font-size:15px;}
+  .floor-title-row span{display:block;color:var(--slate);font-size:11px;margin-top:2px;}
+  .map-scale-note{font-size:10px!important;white-space:nowrap;}
+  .floor-image-frame{position:relative;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:auto;line-height:0;transition:box-shadow .18s;}
+  .floor-image-frame.room-found{box-shadow:0 0 0 3px rgba(203,157,59,.28);}
+  .floor-image-frame img{display:block;width:100%;height:auto;min-width:620px;}
+  .floor-legend{margin-top:9px;}
+  .room-chip-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+  .room-chip{border:1px solid var(--line);background:var(--paper-3);color:var(--text-primary);border-radius:9px;padding:7px 10px;cursor:pointer;}
+  .room-chip:hover{border-color:var(--gold);color:var(--gold);}
+  .route-meta{font-size:11px;color:var(--slate);margin:0 0 10px;}
+  .route-disclaimer{font-size:10.5px;color:var(--slate);line-height:1.5;border-top:1px solid var(--line);padding-top:10px;margin-top:8px;}
+  .campus-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;}
+  .campus-info-card{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:13px;display:flex;flex-direction:column;gap:4px;}
+  .campus-info-card b{font-size:12px;}.campus-info-card span{font-size:11px;color:var(--slate);line-height:1.45;}
+
   /* ---------- MOBILE ---------- */
   @media (max-width: 860px){
     .app{grid-template-columns:1fr;}
@@ -345,6 +383,14 @@
     .stat-row{grid-template-columns:1fr 1fr;gap:10px;}
     .two-col{grid-template-columns:1fr;}
     .map-wrap{grid-template-columns:1fr;}
+    .campus-info-grid{grid-template-columns:1fr;}
+    .map-tools{align-items:stretch;}
+    .map-action{flex:1;}
+    .floor-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+    .floor-tab{padding:9px 3px;font-size:11px;}
+    .floor-title-row{align-items:flex-start;}
+    .map-scale-note{display:none!important;}
+    .floor-image-frame img{min-width:900px;}
 
     /* Никакой горизонтальной прокрутки на телефоне. */
     .ledger{
@@ -793,74 +839,57 @@
     <!-- ================= MAP ================= -->
     <section class="view" id="view-map">
       <div class="page-head">
-        <p class="eyebrow">Ориентация на местности</p>
+        <p class="eyebrow">Ориентация на ВМК</p>
         <h1>Карта кампуса</h1>
-        <p>Нажмите на здание, чтобы увидеть, как до него добраться и что там находится.</p>
+        <p>Планы этажей ВМК с аудиториями, лестницами и важными местами. Выберите этаж или найдите аудиторию.</p>
       </div>
 
-      <div class="map-wrap">
-        <div class="map-canvas">
-          <svg viewBox="0 0 560 380" width="100%" id="campus-svg">
-            <!-- paths -->
-            <path class="path-line" d="M 120 300 L 120 200 L 230 200"/>
-            <path class="path-line" d="M 230 200 L 230 110"/>
-            <path class="path-line" d="M 230 200 L 360 200 L 360 260"/>
-            <path class="path-line" d="M 360 200 L 460 200 L 460 120"/>
-            <path class="path-line" d="M 120 200 L 120 120"/>
+      <div class="floor-tabs" id="floor-tabs" role="tablist" aria-label="Этажи">
+        <button class="floor-tab active" data-floor="1" type="button">1 этаж</button>
+        <button class="floor-tab" data-floor="2" type="button">2 этаж</button>
+        <button class="floor-tab" data-floor="5" type="button">5 этаж</button>
+        <button class="floor-tab" data-floor="6" type="button">6 этаж</button>
+        <button class="floor-tab" data-floor="7" type="button">7 этаж</button>
+      </div>
 
-            <!-- you are here -->
-            <circle class="you-pin" cx="120" cy="300" r="6"/>
-            <text x="132" y="304" class="bld-label" style="font-weight:600">Вы здесь · главный вход</text>
+      <div class="map-tools">
+        <label class="room-search">
+          <span>Аудитория</span>
+          <input id="room-search-input" type="search" inputmode="text" autocomplete="off" placeholder="Например, 787 или П-6">
+        </label>
+        <button class="map-action" id="room-route-btn" type="button">Построить маршрут</button>
+        <button class="map-action secondary" id="my-room-btn" type="button">Мои аудитории</button>
+      </div>
 
-            <!-- building 1: humanities block -->
-            <g class="bld" data-b="c1">
-              <rect x="70" y="60" width="100" height="60" rx="4" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.4"/>
-              <text x="120" y="94" text-anchor="middle" class="bld-label">1-й корпус</text>
-              <text x="120" y="108" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">гуманитарные</text>
-            </g>
-
-            <!-- building 2: VMK -->
-            <g class="bld" data-b="c2">
-              <rect x="180" y="60" width="110" height="60" rx="4" fill="var(--blue-soft)" stroke="var(--blue)" stroke-width="1.4"/>
-              <text x="235" y="94" text-anchor="middle" class="bld-label">Корпус ВМК</text>
-              <text x="235" y="108" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">учебный</text>
-            </g>
-
-            <!-- library -->
-            <g class="bld" data-b="lib">
-              <rect x="180" y="170" width="100" height="60" rx="4" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="1.4"/>
-              <text x="230" y="204" text-anchor="middle" class="bld-label">Библиотека</text>
-              <text x="230" y="218" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">фундаментальная</text>
-            </g>
-
-            <!-- corpus 3 / sport -->
-            <g class="bld" data-b="c3">
-              <rect x="310" y="230" width="100" height="60" rx="4" fill="var(--oxblood-soft)" stroke="var(--oxblood)" stroke-width="1.4"/>
-              <text x="360" y="264" text-anchor="middle" class="bld-label">Спорткомплекс</text>
-              <text x="360" y="278" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">физкультура</text>
-            </g>
-
-            <!-- main building / dean's office -->
-            <g class="bld" data-b="adm">
-              <rect x="410" y="60" width="100" height="60" rx="4" fill="var(--paper-3)" stroke="var(--slate)" stroke-width="1.4"/>
-              <text x="460" y="94" text-anchor="middle" class="bld-label">Главное здание</text>
-              <text x="460" y="108" text-anchor="middle" class="bld-label" style="fill:var(--slate);font-size:9px">деканат ВМК</text>
-            </g>
-          </svg>
-          <div class="legend">
-            <span><i style="background:var(--blue)"></i>учебные корпуса</span>
-            <span><i style="background:var(--gold)"></i>библиотека</span>
-            <span><i style="background:var(--oxblood)"></i>спорт</span>
-            <span><i style="background:var(--slate)"></i>администрация</span>
+      <div class="map-wrap floor-map-wrap">
+        <div class="map-canvas floor-map-canvas">
+          <div class="floor-title-row">
+            <div><b id="floor-title">1 этаж</b><span id="floor-note">Планы по материалам карты ВМК</span></div>
+            <span class="map-scale-note">Маршрут — ориентировочный</span>
+          </div>
+          <div class="floor-image-frame" id="floor-image-frame">
+            <img id="floor-map-image" src="floor-1.png" alt="План 1 этажа ВМК" loading="eager">
+            <div class="room-highlight" id="room-highlight" hidden></div>
+          </div>
+          <div class="legend floor-legend">
+            <span>✦ лестницы</span>
+            <span>М / Ж — туалеты</span>
+            <span>аудитории — по плану этажа</span>
           </div>
         </div>
 
         <div class="route-panel" id="route-panel">
-          <p class="route-empty">Выберите здание на карте, чтобы построить маршрут от главного входа и узнать, что там находится.</p>
+          <div class="route-panel-head"><span class="badge">Навигация</span></div>
+          <p class="route-empty">Выберите этаж и аудиторию, чтобы получить ориентировочный маршрут от главного входа ВМК, этаж, ближайшую лестницу и примерное время в пути.</p>
         </div>
       </div>
-    </section>
 
+      <div class="campus-info-grid">
+        <div class="campus-info-card"><b>Лестницы</b><span>На планах отмечены лестничные узлы. Для маршрута используется ближайшая подходящая лестница.</span></div>
+        <div class="campus-info-card"><b>Важные места</b><span>На картах сохранены буфеты, столовые, читальный зал, «Сачок», дежурные, Профком и другие отмеченные места.</span></div>
+        <div class="campus-info-card"><b>Время</b><span>Расчёт примерный: он основан на расстояниях по плану и средней скорости пешком, а не на точном GPS.</span></div>
+      </div>
+    </section>
 
     <!-- ================= PROFILE MODAL ================= -->
     <div class="profile-backdrop" id="profile-backdrop" aria-hidden="true"></div>
@@ -1068,43 +1097,42 @@
   const scheduleLessons = {
     1:[
       {start:'08:45',end:'10:20',n:'',r:'',type:''},
-      {start:'10:30',end:'12:05',n:'Матанализ',r:'Емельянов Д.П. · ауд. 653',type:'discipline-math'},
-      {start:'12:50',end:'14:25',n:'Математический анализ',r:'П-6 · доцент Никитин Алексей Антонович',type:'discipline-math'},
-      {start:'14:35',end:'16:10',n:'Алгебра и геометрия',r:'Золотарёва Н.Д. · ауд. 787',type:'discipline-algebra'},
-      {start:'16:50',end:'18:20',n:'Физическая культура',r:'спортзал',type:'discipline-pe'}
+      {start:'10:30',end:'12:05',n:'Математический анализ',teachers:[['Емельянов Д.П.','653']],kind:'Практика',type:'discipline-math'},
+      {start:'12:50',end:'14:25',n:'Математический анализ',teachers:[['доцент Никитин Алексей Антонович','П-6']],kind:'Лекция',type:'discipline-math'},
+      {start:'14:35',end:'16:10',n:'Алгебра и геометрия',teachers:[['Золотарёва Н.Д.','787']],kind:'Практика',type:'discipline-algebra'},
+      {start:'16:50',end:'18:20',n:'Физическая культура',teachers:[['','спортзал']],kind:'Физическая культура',type:'discipline-pe'}
     ],
     2:[
       {start:'08:45',end:'10:20',n:'',r:'',type:''},
-      {start:'10:30',end:'12:05',n:'Алгебра и геометрия',r:'Золотарёва Н.Д. · ауд. 779',type:'discipline-algebra'},
-      {start:'12:50',end:'14:25',n:'Алгебра и геометрия',r:'П-5 · доцент Панфёров Валерий Семёнович',type:'discipline-algebra'},
-      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',r:'Капитонова А.П. · ауд. 659 · Пашков В.Н. · 515',type:'discipline-practicum'},
-      {start:'16:20',end:'17:55',n:'Иностранный язык',r:'Попотяпова Н.М. · ауд. 785 · Перцева З.Н. · 71',type:'discipline-foreign'}
+      {start:'10:30',end:'12:05',n:'Алгебра и геометрия',teachers:[['Золотарёва Н.Д.','779']],kind:'Практика',type:'discipline-algebra'},
+      {start:'12:50',end:'14:25',n:'Алгебра и геометрия',teachers:[['доцент Панфёров Валерий Семёнович','П-5']],kind:'Лекция',type:'discipline-algebra'},
+      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Пашков В.Н.','515']],kind:'Практика',type:'discipline-practicum'},
+      {start:'16:20',end:'17:55',n:'Иностранный язык',teachers:[['Попотяпова Н.М.','785'],['Перцева З.Н.','71']],kind:'Практика',type:'discipline-foreign'}
     ],
     3:[
-      {start:'08:45',end:'10:20',n:'Алгоритмы и алгоритмические языки',r:'П-13 · доцент Корухова Юлия Станиславовна',type:'discipline-algorithms'},
-      {start:'10:30',end:'12:05',n:'Алгоритмы и алгоритмические языки',r:'П-13 · доцент Корухова Юлия Станиславовна',type:'discipline-algorithms'},
-      {start:'12:50',end:'14:25',n:'Математический анализ',r:'П-11 · доцент Никитин Алексей Антонович',type:'discipline-math'},
-      {start:'15:10',end:'18:50',n:'Межфакультетские курсы',r:'',type:'discipline-civics'}
+      {start:'08:45',end:'10:20',n:'Алгоритмы и алгоритмические языки',teachers:[['доцент Корухова Юлия Станиславовна','П-13']],kind:'Лекция',type:'discipline-algorithms'},
+      {start:'10:30',end:'12:05',n:'Алгоритмы и алгоритмические языки',teachers:[['доцент Корухова Юлия Станиславовна','П-13']],kind:'Лекция',type:'discipline-algorithms'},
+      {start:'12:50',end:'14:25',n:'Математический анализ',teachers:[['доцент Никитин Алексей Антонович','П-11']],kind:'Лекция',type:'discipline-math'},
+      {start:'15:10',end:'18:50',n:'Межфакультетские курсы',teachers:[],kind:'Межфакультетский курс',type:'discipline-civics'}
     ],
     4:[
-      {start:'08:45',end:'10:20',n:'БЗД',r:'Сладкова Н.В. · ауд. 614'},
-      {start:'08:45',end:'10:20',n:'История России',r:'с 17.09 · Чубыкин И.В. · ауд. 523',type:'discipline-history',startsOn:'2026-09-17'},
-      {start:'10:30',end:'12:05',n:'История России',r:'П-5 · Меркулова Анастасия Михайловна',type:'discipline-history'},
-      {start:'12:50',end:'14:25',n:'Алгебра и геометрия',r:'П-5 · доцент Панфёров Валерий Семёнович',type:'discipline-algebra'},
-      {start:'14:35',end:'16:10',n:'Матанализ',r:'Емельянов Д.П. · ауд. 615',type:'discipline-math'}
+      {start:'08:45',end:'10:20',n:'БЗД',teachers:[['Сладкова Н.В.','614']],kind:'Практика',type:'discipline-safety'},
+      {start:'08:45',end:'10:20',n:'История России',teachers:[['Чубыкин И.В.','523']],kind:'Практика',type:'discipline-history',startsOn:'2026-09-17'},
+      {start:'10:30',end:'12:05',n:'История России',teachers:[['Меркулова Анастасия Михайловна','П-5']],kind:'Лекция',type:'discipline-history'},
+      {start:'12:50',end:'14:25',n:'Алгебра и геометрия',teachers:[['доцент Панфёров Валерий Семёнович','П-5']],kind:'Лекция',type:'discipline-algebra'},
+      {start:'14:35',end:'16:10',n:'Математический анализ',teachers:[['Емельянов Д.П.','615']],kind:'Практика',type:'discipline-math'}
     ],
     5:[
-      {start:'09:00',end:'10:30',n:'Физическая культура',r:'',type:'discipline-pe'},
-      {start:'10:40',end:'12:15',n:'Иностранный язык',r:'Попотяпова Н.М. · ауд. 71',type:'discipline-foreign'},
-      {start:'12:50',end:'14:25',n:'История России',r:'с 11.09 · Меркулова А.М. · ауд. 729',type:'discipline-history',startsOn:'2026-09-11'},
-      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',r:'Капитонова А.П. · ауд. 659 · Пашков В.Н. · 515',type:'discipline-practicum'},
-      {start:'16:20',end:'17:55',n:'Консультация: практикум на ЭВМ',r:'Капитонова А.П. · ауд. 659 · Никифоров А.Н. · 515',type:'discipline-practicum'}
+      {start:'09:00',end:'10:30',n:'Физическая культура',teachers:[['','спортзал']],kind:'Физическая культура',type:'discipline-pe'},
+      {start:'10:40',end:'12:15',n:'Иностранный язык',teachers:[['Попотяпова Н.М.','71']],kind:'Практика',type:'discipline-foreign'},
+      {start:'12:50',end:'14:25',n:'История России',teachers:[['Меркулова А.М.','729']],kind:'Практика',type:'discipline-history',startsOn:'2026-09-11'},
+      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Пашков В.Н.','515']],kind:'Практика',type:'discipline-practicum'},
+      {start:'16:20',end:'17:55',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Никифоров А.Н.','515']],kind:'Консультация',type:'discipline-practicum'}
     ],
     6:[
-      {start:'08:45',end:'10:30',n:'Основы российской государственности',r:'П-13 · Ляховенко О.И.',type:'discipline-civics'}
+      {start:'08:45',end:'10:30',n:'Основы российской государственности',teachers:[['Ляховенко О.И.','П-13']],kind:'Лекция',type:'discipline-civics'}
     ]
   };
-
   // Для БЗД в четверг сохраняем отдельный объект с явным цветом.
   scheduleLessons[4][0].type='discipline-safety';
 
@@ -1155,7 +1183,7 @@
       grid+=`<div class="cell time"><span>${t.start}</span><small>${t.end}</small></div>`;
       visibleDays.forEach(d=>{
         const les=getLesson(d.date.getDay(),t.start,t.end,d.date);
-        grid+=`<div class="cell">${les?`<div class="lesson ${les.type||''}"><b>${les.n}</b><span class="rm">${les.r}</span></div>`:''}</div>`;
+        grid+=`<div class="cell">${les?`<div class="lesson ${les.type||''}"><b>${les.n}</b>${les.kind?`<span class="lesson-kind">${les.kind}</span>`:''}${renderTeachers(les)}</div>`:''}</div>`;
       });
     });
     document.getElementById('week-grid').innerHTML=grid;
@@ -1187,6 +1215,18 @@
   window.addEventListener('resize',renderWeek);
   renderWeek();
 
+  function renderTeachers(lesson, dashboard=false){
+    const teachers=lesson.teachers||[];
+    if(!teachers.length) return '';
+    return teachers.map(([name,room])=>{
+      const safeName=name||'';
+      const roomText=room?`<span class="teacher-room"> · ${room}</span>`:'';
+      return dashboard
+        ? `<span class="teacher-line"><span class="today-teacher">${safeName||'Преподаватель не указан'}${room?`<span class="today-room"> · ${room}</span>`:''}</span></span>`
+        : `<span class="teacher-line">${safeName||'Преподаватель не указан'}${roomText}</span>`;
+    }).join('');
+  }
+
   function renderTodayDashboard(){
     const title=document.getElementById('today-title');
     const box=document.getElementById('today-schedule');
@@ -1196,7 +1236,7 @@
     title.textContent=`Сегодня, ${namesFull[now.getDay()]}`;
     const lessons=(scheduleLessons[now.getDay()]||[]).filter(x=>x.n && (!x.startsOn || dateOnly(now)>=dateOnly(new Date(x.startsOn))));
     if(!lessons.length){box.innerHTML='<p class="route-empty">Сегодня занятий по расписанию нет.</p>';return;}
-    box.innerHTML=lessons.map(x=>`<div class="today-row"><span class="today-time">${x.start}</span><span class="today-info"><b>${x.n}</b><br><span class="today-room">${x.end} · ${x.r||'аудитория уточняется'}</span></span></div>`).join('');
+    box.innerHTML=lessons.map(x=>`<div class="today-row"><span class="today-time">${x.start}</span><span class="today-info"><b>${x.n}</b>${x.kind?`<span class="today-kind">${x.kind}</span>`:''}${renderTeachers(x,true)}</span></div>`).join('');
     const count=Object.values(scheduleLessons).flat().filter(x=>x.n).length;
     const stat=document.querySelector('.stat-row .stat:nth-child(2) .num');
     if(stat) stat.textContent=count;
@@ -1223,7 +1263,7 @@
         const key=reminderKey(now,lesson,reminderMinutes);
         if(localStorage.getItem(key)) return;
         localStorage.setItem(key,'1');
-        const room=lesson.r?.match(/ауд\.\s*[^·]+/)?.[0] || '';
+        const room=(lesson.teachers||[]).map(x=>x[1]).filter(Boolean).join(', ');
         const body=`Через ${diff} мин. · ${lesson.start}–${lesson.end}${room?` · ${room}`:''}`;
         try{new Notification(`Скоро: ${lesson.n}`,{body,icon:'icon-192.png',tag:key});}catch(e){}
         showToast(`Скоро пара: ${lesson.n}`);
@@ -1250,38 +1290,100 @@
     </div>`).join('');
 
   // ---------- campus map ----------
-  const routes = {
-    c1:{title:'1-й корпус — гуманитарные дисциплины',steps:[
-      'От главного входа идите прямо на север 90 м вдоль главной аллеи.',
-      'На развилке у библиотеки поверните налево.',
-      'Корпус будет справа, вход со стороны сквера.'],time:'≈ 4 мин пешком'},
-    c2:{title:'Корпус ВМК — учебные аудитории',steps:[
-      'От главного входа идите на север до площади у библиотеки.',
-      'Поверните направо и пройдите ещё 40 м.',
-      'Корпус ВМК — второе здание, вход с торца, ауд. 6xx и 4xx.'],time:'≈ 5 мин пешком'},
-    lib:{title:'Фундаментальная библиотека',steps:[
-      'От главного входа идите прямо на север 90 м.',
-      'Библиотека — здание прямо перед вами, у развилки.'],time:'≈ 3 мин пешком'},
-    c3:{title:'Спортивный комплекс',steps:[
-      'От главного входа идите на север до библиотеки.',
-      'Поверните направо, затем на первом повороте — направо ещё раз.',
-      'Зал находится в цокольном этаже, вход со двора.'],time:'≈ 6 мин пешком'},
-    adm:{title:'Главное здание — деканат ВМК',steps:[
-      'От главного входа идите на север до библиотеки, затем направо.',
-      'На площади у корпуса ВМК поверните направо и идите ещё 90 м на север.',
-      'Деканат ВМК — второй этаж, каб. 205.'],time:'≈ 7 мин пешком'},
+  // Планы 1, 2, 5, 6 и 7 этажей взяты из пользовательского PDF.
+  // Координатная навигация внутри здания приблизительная: карта не содержит метрической сетки.
+  const floorMaps = {
+    1: {img:'floor-1.png', title:'1 этаж', rooms:['П-3','П-4','П-5','П-6','П-13','П-14','МЗ-0','МЗ-1','МЗ-2','МЗ-3','МЗ-4','МЗ-5']},
+    2: {img:'floor-2.png', title:'2 этаж', rooms:['П-3','П-4','П-5','П-6','П-8','П-8А','П-9','П-12','П-13','П-14']},
+    5: {img:'floor-5.png', title:'5 этаж', rooms:[]},
+    6: {img:'floor-6.png', title:'6 этаж', rooms:[]},
+    7: {img:'floor-7.png', title:'7 этаж', rooms:[]}
   };
-  document.querySelectorAll('.bld').forEach(g=>{
-    g.addEventListener('click',()=>{
-      const r = routes[g.dataset.b];
-      document.getElementById('route-panel').innerHTML = `
-        <span class="badge">${r.time}</span>
-        <h3>${r.title}</h3>
-        ${r.steps.map((s,i)=>`<div class="route-step"><span class="n">${i+1}</span><span>${s}</span></div>`).join('')}
-      `;
-    });
-  });
+  // Полный диапазон кабинетов, присутствующих на этажах 5–7. Точные исключения допустимы:
+  // пользователь может ввести любой номер, а система определит этаж по первой цифре.
+  const floorRoomRanges = {5:[501,598],6:[601,699],7:[701,799]};
+  const lectureRooms = new Set(['П-3','П-4','П-5','П-6','П-8','П-8А','П-9','П-12','П-13','П-14']);
+  let selectedFloor = 1;
 
+  function normalizeRoom(v){
+    return String(v||'').trim().toUpperCase().replace(/\s+/g,'').replace('–','-').replace('—','-');
+  }
+  function detectFloor(room){
+    const r=normalizeRoom(room);
+    if(/^П-\d/.test(r) || /^МЗ-\d/.test(r)) return [1,2];
+    const n=Number(r);
+    if(Number.isInteger(n) && floorRoomRanges[Number(String(n)[0])]) return [Number(String(n)[0])];
+    return [];
+  }
+  function roomPosition(room){
+    const r=normalizeRoom(room);
+    if(/^П-/.test(r) || /^МЗ-/.test(r)) return {zone:'lecture'};
+    const n=Number(r), floor=Number(String(n)[0]), tail=n%100;
+    if(!floorRoomRanges[floor]) return null;
+    // Номера на 5–7 этажах идут вокруг коридора; делим коридор на север/центр/юг.
+    if(tail<20) return {zone:'north', tail};
+    if(tail<55) return {zone:'center', tail};
+    return {zone:'south', tail};
+  }
+  function routeForRoom(room, from='Главный вход ВМК'){
+    const r=normalizeRoom(room), floors=detectFloor(r);
+    if(!floors.length) return null;
+    const floor = r.startsWith('П-') || r.startsWith('МЗ-') ? (r==='П-8'||r==='П-8А'||r==='П-9'||r==='П-12'?2:1) : floors[0];
+    const pos=roomPosition(r) || {zone:'lecture'};
+    const steps=[];
+    let minutes=3;
+    steps.push(`От ${from} войдите в здание ВМК и двигайтесь к лестничному узлу.`);
+    if(floor===1){
+      steps.push(pos.zone==='lecture' ? 'Спуститесь/перейдите к коридору лекционных аудиторий первого этажа.' : 'Оставайтесь на первом этаже и выйдите в основной коридор.');
+      minutes+=2;
+    } else if(floor===2){
+      steps.push('Поднимитесь на 2 этаж по ближайшей лестнице.'); minutes+=2;
+      steps.push(pos.zone==='lecture' ? 'Двигайтесь к лекционному блоку П-аудиторий.' : 'Выйдите в основной коридор второго этажа и двигайтесь к нужному крылу.'); minutes+=2;
+    } else {
+      steps.push(`Поднимитесь на ${floor} этаж по лестнице.`); minutes+=floor-1;
+      const zoneText={north:'северное крыло',center:'центральная часть коридора',south:'южное крыло'}[pos.zone]||'основной коридор';
+      steps.push(`На этаже двигайтесь по коридору в сторону: ${zoneText}.`); minutes+=2;
+      const extra=Math.max(1,Math.min(5,Math.round((pos.tail||50)/25)));
+      minutes+=extra;
+    }
+    steps.push(`Найдите аудиторию ${r} по нумерации на плане этажа.`);
+    const distance=Math.max(120,Math.round(minutes*70));
+    return {room:r,floor,title:`Маршрут до ${r}`,minutes,distance,steps};
+  }
+  function renderRoomRoute(room){
+    const r=routeForRoom(room);
+    const panel=document.getElementById('route-panel');
+    if(!r){panel.innerHTML='<span class="badge">Не найдено</span><h3>Не удалось определить аудиторию</h3><p class="route-empty">Введите номер вроде 787, 659, 502 или обозначение лекционной аудитории П-5 / П-6. Для 5–7 этажей этаж определяется по первой цифре.</p>';return;}
+    selectedFloor=r.floor;
+    updateFloorMap();
+    panel.innerHTML=`<span class="badge">≈ ${r.minutes} мин · ≈ ${r.distance} м</span><h3>${r.title}</h3><p class="route-meta">${floorMaps[r.floor]?.title||r.floor+' этаж'} · от главного входа ВМК</p>${r.steps.map((s,i)=>`<div class="route-step"><span class="n">${i+1}</span><span>${s}</span></div>`).join('')}<div class="route-disclaimer">Время ориентировочное: учтены переходы между этажами и средняя скорость ходьбы. Двери, перекрытые проходы и реальная загруженность коридоров могут изменить время.</div>`;
+    document.getElementById('room-search-input').value=room;
+    highlightRoom(room);
+  }
+  function updateFloorMap(){
+    const data=floorMaps[selectedFloor];
+    document.querySelectorAll('.floor-tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.floor)===selectedFloor));
+    const img=document.getElementById('floor-map-image');
+    img.src=data.img; img.alt=`План ${data.title} ВМК`;
+    document.getElementById('floor-title').textContent=data.title;
+    document.getElementById('room-highlight').hidden=true;
+  }
+  function highlightRoom(room){
+    // Точное положение текстовой метки на растре не всегда можно восстановить автоматически,
+    // поэтому выделяем карту рамкой и не рисуем ложную точку поверх неизвестной координаты.
+    const frame=document.getElementById('floor-image-frame');
+    frame.classList.remove('room-found'); void frame.offsetWidth; frame.classList.add('room-found');
+  }
+  document.querySelectorAll('.floor-tab').forEach(btn=>btn.addEventListener('click',()=>{selectedFloor=Number(btn.dataset.floor);updateFloorMap();}));
+  document.getElementById('room-route-btn')?.addEventListener('click',()=>renderRoomRoute(document.getElementById('room-search-input').value));
+  document.getElementById('room-search-input')?.addEventListener('keydown',e=>{if(e.key==='Enter') renderRoomRoute(e.currentTarget.value);});
+  document.getElementById('my-room-btn')?.addEventListener('click',()=>{
+    const rooms=['653','787','779','785','614','523','615','729','659','515','71','П-6','П-5','П-13'];
+    const panel=document.getElementById('route-panel');
+    panel.innerHTML=`<span class="badge">Моё расписание</span><h3>Аудитории группы 119</h3><p class="route-empty">Выберите аудиторию из списка — сайт покажет этаж и ориентировочный маршрут.</p><div class="room-chip-list">${[...new Set(rooms)].map(r=>`<button type="button" class="room-chip" data-room="${r}">${r}</button>`).join('')}</div>`;
+    panel.querySelectorAll('.room-chip').forEach(b=>b.addEventListener('click',()=>renderRoomRoute(b.dataset.room)));
+  });
+  updateFloorMap();
 
   // ---------- notifications ----------
   const notifBtn = document.getElementById('notif-btn');
