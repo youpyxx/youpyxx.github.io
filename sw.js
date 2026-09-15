@@ -1,4 +1,4 @@
-const CACHE = 'kabinet-v4-group119';
+const CACHE = 'kabinet-v5-group119';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vmk-logo-yellow.png', './floor-1.png', './floor-2.png', './floor-5.png', './floor-6.png', './floor-7.png'];
 
 self.addEventListener('install', e => {
