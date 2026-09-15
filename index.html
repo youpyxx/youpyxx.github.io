@@ -345,6 +345,10 @@
   .map-scale-note{font-size:10px!important;white-space:nowrap;}
   .floor-image-frame{position:relative;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:auto;line-height:0;transition:box-shadow .18s;}
   .floor-image-frame.room-found{box-shadow:0 0 0 3px rgba(203,157,59,.28);}
+  .floor-image-frame .room-highlight{position:absolute;width:58px;height:42px;transform:translate(-50%,-50%);border:2px solid var(--gold);border-radius:9px;box-shadow:0 0 0 4px rgba(231,180,63,.18),0 0 18px rgba(231,180,63,.45);pointer-events:none;animation:roomPulse .9s ease-out 1;}
+  @keyframes roomPulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.75)}45%{opacity:1}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+  .map-search-result{margin-top:8px;font-size:12px;color:var(--slate);}
+  .map-search-result b{color:var(--gold);}
   .floor-image-frame img{display:block;width:100%;height:auto;min-width:620px;}
   .floor-legend{margin-top:9px;}
   .room-chip-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
@@ -1064,7 +1068,7 @@
     {s:'Алгоритмы и языки',f:'зачёт с оценкой',t:'Корухова Ю.С.',g:'—',cls:'pending'},
     {s:'Практикум на ЭВМ',f:'зачёт',t:'Капитонова А.П.',g:'—',cls:'pending'},
     {s:'История России',f:'зачёт',t:'Меркулова А.М.',g:'—',cls:'pending'},
-    {s:'БЗД',f:'зачёт',t:'Сладкова Н.В.',g:'—',cls:'pending'},
+    {s:'БЗД',f:'зачёт',t:'Гимишли Н.Ф.',g:'—',cls:'pending'},
     {s:'Основы российской государственности',f:'зачёт',t:'Дорохова Е.И.',g:'зачёт',cls:'pass'},
     {s:'Иностранный язык',f:'зачёт',t:'Орлова М.С.',g:'зачёт',cls:'pass'},
     {s:'Физическая культура',f:'зачёт',t:'Быков А.Н.',g:'зачёт',cls:'pass'},
@@ -1097,17 +1101,17 @@
   const scheduleLessons = {
     1:[
       {start:'08:45',end:'10:20',n:'',r:'',type:''},
-      {start:'10:30',end:'12:05',n:'Математический анализ',teachers:[['Емельянов Д.П.','653']],kind:'Практика',type:'discipline-math'},
+      {start:'10:30',end:'12:05',n:'Математический анализ',teachers:[['Емельянов Д.П.','653']],kind:'Семинар (практика)',type:'discipline-math'},
       {start:'12:50',end:'14:25',n:'Математический анализ',teachers:[['доцент Никитин Алексей Антонович','П-6']],kind:'Лекция',type:'discipline-math'},
-      {start:'14:35',end:'16:10',n:'Алгебра и геометрия',teachers:[['Золотарёва Н.Д.','787']],kind:'Практика',type:'discipline-algebra'},
-      {start:'16:50',end:'18:20',n:'Физическая культура',teachers:[['','спортзал']],kind:'Физическая культура',type:'discipline-pe'}
+      {start:'14:35',end:'16:10',n:'Алгебра и геометрия',teachers:[['Золотарёва Н.Д.','787']],kind:'Семинар (практика)',type:'discipline-algebra'},
+      {start:'16:50',end:'18:20',n:'Физическая культура',teachers:[['Лазарева В.Е.','гимнастический зал']],kind:'Физическая культура',type:'discipline-pe'}
     ],
     2:[
       {start:'08:45',end:'10:20',n:'',r:'',type:''},
-      {start:'10:30',end:'12:05',n:'Алгебра и геометрия',teachers:[['Золотарёва Н.Д.','779']],kind:'Практика',type:'discipline-algebra'},
+      {start:'10:30',end:'12:05',n:'Алгебра и геометрия',teachers:[['Золотарёва Н.Д.','779']],kind:'Семинар (практика)',type:'discipline-algebra'},
       {start:'12:50',end:'14:25',n:'Алгебра и геометрия',teachers:[['доцент Панфёров Валерий Семёнович','П-5']],kind:'Лекция',type:'discipline-algebra'},
-      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Пашков В.Н.','515']],kind:'Практика',type:'discipline-practicum'},
-      {start:'16:20',end:'17:55',n:'Иностранный язык',teachers:[['Попотяпова Н.М.','785'],['Перцева З.Н.','71']],kind:'Практика',type:'discipline-foreign'}
+      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Пашков В.Н.','515']],kind:'Семинар (практика)',type:'discipline-practicum'},
+      {start:'09:00',end:'10:30',n:'Иностранный язык',teachers:[['Попотяпова Н.М.','785']],kind:'Семинар (практика)',type:'discipline-foreign'}
     ],
     3:[
       {start:'08:45',end:'10:20',n:'Алгоритмы и алгоритмические языки',teachers:[['доцент Корухова Юлия Станиславовна','П-13']],kind:'Лекция',type:'discipline-algorithms'},
@@ -1116,17 +1120,17 @@
       {start:'15:10',end:'18:50',n:'Межфакультетские курсы',teachers:[],kind:'Межфакультетский курс',type:'discipline-civics'}
     ],
     4:[
-      {start:'08:45',end:'10:20',n:'БЗД',teachers:[['Сладкова Н.В.','614']],kind:'Практика',type:'discipline-safety'},
-      {start:'08:45',end:'10:20',n:'История России',teachers:[['Чубыкин И.В.','523']],kind:'Практика',type:'discipline-history',startsOn:'2026-09-17'},
+      {start:'16:20',end:'17:55',n:'БЗД',teachers:[['Гимишли Н.Ф.','614']],kind:'Семинар (практика)',type:'discipline-safety'},
+      {start:'08:45',end:'10:20',n:'История России',teachers:[['Чубыкин И.В.','523']],kind:'Семинар (практика)',type:'discipline-history',startsOn:'2026-09-17'},
       {start:'10:30',end:'12:05',n:'История России',teachers:[['Меркулова Анастасия Михайловна','П-5']],kind:'Лекция',type:'discipline-history'},
       {start:'12:50',end:'14:25',n:'Алгебра и геометрия',teachers:[['доцент Панфёров Валерий Семёнович','П-5']],kind:'Лекция',type:'discipline-algebra'},
-      {start:'14:35',end:'16:10',n:'Математический анализ',teachers:[['Емельянов Д.П.','615']],kind:'Практика',type:'discipline-math'}
+      {start:'14:35',end:'16:10',n:'Математический анализ',teachers:[['Емельянов Д.П.','615']],kind:'Семинар (практика)',type:'discipline-math'}
     ],
     5:[
-      {start:'09:00',end:'10:30',n:'Физическая культура',teachers:[['','спортзал']],kind:'Физическая культура',type:'discipline-pe'},
-      {start:'10:40',end:'12:15',n:'Иностранный язык',teachers:[['Попотяпова Н.М.','71']],kind:'Практика',type:'discipline-foreign'},
-      {start:'12:50',end:'14:25',n:'История России',teachers:[['Меркулова А.М.','729']],kind:'Практика',type:'discipline-history',startsOn:'2026-09-11'},
-      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Пашков В.Н.','515']],kind:'Практика',type:'discipline-practicum'},
+      {start:'09:00',end:'10:30',n:'Физическая культура',teachers:[['Лазарева В.Е.','гимнастический зал']],kind:'Физическая культура',type:'discipline-pe'},
+      {start:'10:40',end:'12:15',n:'Иностранный язык',teachers:[['Попотяпова Н.М.','71']],kind:'Семинар (практика)',type:'discipline-foreign'},
+      {start:'12:50',end:'14:25',n:'История России',teachers:[['Меркулова А.М.','729']],kind:'Семинар (практика)',type:'discipline-history',startsOn:'2026-09-11'},
+      {start:'14:35',end:'16:10',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Пашков В.Н.','515']],kind:'Семинар (практика)',type:'discipline-practicum'},
       {start:'16:20',end:'17:55',n:'Практикум на ЭВМ',teachers:[['Капитонова А.П.','659'],['Никифоров А.Н.','515']],kind:'Консультация',type:'discipline-practicum'}
     ],
     6:[
@@ -1157,6 +1161,10 @@
 
   let weekIndex=0;
   let mobileDayOffset=0;
+  // Открываем расписание на неделе, в которую попадает сегодняшняя дата.
+  const todayForSchedule=dateOnly(new Date());
+  const todayWeek=weeks.findIndex(w=>w.some(d=>dateOnly(d.date).getTime()===todayForSchedule.getTime()));
+  if(todayWeek>=0) weekIndex=todayWeek;
   function fmtDate(d){return `${d.getDate()} ${monthNamesShort[d.getMonth()]}`;}
   function fmtRange(a,b){
     if(a.getMonth()===b.getMonth() && a.getFullYear()===b.getFullYear()) return `${a.getDate()} — ${b.getDate()} ${monthNames[b.getMonth()]} ${b.getFullYear()}`;
@@ -1222,8 +1230,8 @@
       const safeName=name||'';
       const roomText=room?`<span class="teacher-room"> · ${room}</span>`:'';
       return dashboard
-        ? `<span class="teacher-line"><span class="today-teacher">${safeName||'Преподаватель не указан'}${room?`<span class="today-room"> · ${room}</span>`:''}</span></span>`
-        : `<span class="teacher-line">${safeName||'Преподаватель не указан'}${roomText}</span>`;
+        ? `<span class="teacher-line"><span class="today-teacher">${safeName||'Преподаватель не указан'}</span>${room?`<span class="today-room">${room}</span>`:''}</span>`
+        : `<span class="teacher-line"><span>${safeName||'Преподаватель не указан'}</span>${room?`<span class="teacher-room">${room}</span>`:''}</span>`;
     }).join('');
   }
 
@@ -1303,6 +1311,15 @@
   // пользователь может ввести любой номер, а система определит этаж по первой цифре.
   const floorRoomRanges = {5:[501,598],6:[601,699],7:[701,799]};
   const lectureRooms = new Set(['П-3','П-4','П-5','П-6','П-8','П-8А','П-9','П-12','П-13','П-14']);
+  // Координаты наиболее часто встречающихся аудиторий группы 119 на исходных планах.
+  // Значения заданы в процентах, поэтому корректно масштабируются на телефоне и ПК.
+  const roomCoords={
+    'П-5':[1,50,43],'П-6':[1,50,43],'П-13':[1,50,43],
+    '523':[5,37,67],'515':[5,32,67],
+    '614':[6,20,65],'615':[6,58,65],'653':[6,94,44],'659':[6,93,26],
+    '787':[7,50,49],'785':[7,53,49],'779':[7,73,49],'729':[7,39,74],'71':[7,10,43],
+    '779':[7,73,49]
+  };
   let selectedFloor = 1;
 
   function normalizeRoom(v){
@@ -1359,6 +1376,8 @@
     panel.innerHTML=`<span class="badge">≈ ${r.minutes} мин · ≈ ${r.distance} м</span><h3>${r.title}</h3><p class="route-meta">${floorMaps[r.floor]?.title||r.floor+' этаж'} · от главного входа ВМК</p>${r.steps.map((s,i)=>`<div class="route-step"><span class="n">${i+1}</span><span>${s}</span></div>`).join('')}<div class="route-disclaimer">Время ориентировочное: учтены переходы между этажами и средняя скорость ходьбы. Двери, перекрытые проходы и реальная загруженность коридоров могут изменить время.</div>`;
     document.getElementById('room-search-input').value=room;
     highlightRoom(room);
+    const input=document.getElementById('room-search-input');
+    input.setAttribute('aria-label',`Аудитория ${r.room}, ${floorMaps[r.floor]?.title||''}`);
   }
   function updateFloorMap(){
     const data=floorMaps[selectedFloor];
@@ -1369,14 +1388,28 @@
     document.getElementById('room-highlight').hidden=true;
   }
   function highlightRoom(room){
-    // Точное положение текстовой метки на растре не всегда можно восстановить автоматически,
-    // поэтому выделяем карту рамкой и не рисуем ложную точку поверх неизвестной координаты.
     const frame=document.getElementById('floor-image-frame');
+    const marker=document.getElementById('room-highlight');
+    const r=normalizeRoom(room);
     frame.classList.remove('room-found'); void frame.offsetWidth; frame.classList.add('room-found');
+    const coord=roomCoords[r];
+    if(coord){
+      const [,x,y]=coord; marker.style.left=x+'%'; marker.style.top=y+'%'; marker.hidden=false;
+    }else{
+      // Для неизвестной комнаты всё равно оставляем заметную подсветку карты и показываем этаж.
+      marker.hidden=true;
+    }
   }
   document.querySelectorAll('.floor-tab').forEach(btn=>btn.addEventListener('click',()=>{selectedFloor=Number(btn.dataset.floor);updateFloorMap();}));
   document.getElementById('room-route-btn')?.addEventListener('click',()=>renderRoomRoute(document.getElementById('room-search-input').value));
   document.getElementById('room-search-input')?.addEventListener('keydown',e=>{if(e.key==='Enter') renderRoomRoute(e.currentTarget.value);});
+  document.getElementById('room-search-input')?.addEventListener('input',e=>{
+    const value=normalizeRoom(e.currentTarget.value);
+    if(!value) return;
+    const floor=detectFloor(value)[0];
+    if(floor){ selectedFloor=floor; updateFloorMap(); }
+    if(roomCoords[value]) renderRoomRoute(value);
+  });
   document.getElementById('my-room-btn')?.addEventListener('click',()=>{
     const rooms=['653','787','779','785','614','523','615','729','659','515','71','П-6','П-5','П-13'];
     const panel=document.getElementById('route-panel');

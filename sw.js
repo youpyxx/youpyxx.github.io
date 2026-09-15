@@ -1,5 +1,5 @@
-const CACHE = 'kabinet-v3-group119';
-const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vmk-logo-yellow.png'];
+const CACHE = 'kabinet-v4-group119';
+const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vmk-logo-yellow.png', './floor-1.png', './floor-2.png', './floor-5.png', './floor-6.png', './floor-7.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
